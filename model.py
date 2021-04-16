@@ -1,8 +1,8 @@
 class Game:
     def __init__(self):
         self.stage = "not_started"
-        self.first_player = Player()
-        self.second_player = Player()
+        self.first_player = Player('Me',Field(10,10))
+        self.second_player = Player('Computer',Field(10,10))
         self.turn = 1
 
 
@@ -11,9 +11,19 @@ class Field:
         self.width = width
         self.height = height
         self._shots = []
-        self._ships = []
+        self._ships = set()
 
+    def add_ship(self,ship):
+        self._ships.add(ship)
 
+    def get_ships(self):
+        return list(self._ships)
+
+    def get_first_to_put_ship(self):
+        return next(filter(lambda x:x.position is not None, self._ships),None)
+
+    def put_ship(self,ship,point):
+        pass
 
 
 class Player:
@@ -27,6 +37,7 @@ class Ship:
         self.size = size
         self.direction = None
         self.position = None
+        self.is_set = False
 
     def get_position_points(self):
         ans = []
