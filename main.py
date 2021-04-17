@@ -1,6 +1,7 @@
 # Pygame шаблон - скелет для нового проекта Pygame
 import pygame
 from models.game import Game
+from views.view import FieldView
 import random
 
 WIDTH = 480
@@ -18,16 +19,17 @@ BLUE = (0, 0, 255)
 pygame.init()
 pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("My Game")
+pygame.display.set_caption("SEA FIGHT")
 clock = pygame.time.Clock()
 game = Game(pygame)
+game.start('HUMAN',"AI")
+field = FieldView(50,50,200,200,game.first_player.field)
 
 # Цикл игры
 running = True
 while running:
     # Держим цикл на правильной скорости
     clock.tick(FPS)
-    game.change_stage('ME')
     # Ввод процесса (события)
     for event in pygame.event.get():
         # check for closing window
@@ -37,10 +39,11 @@ while running:
             print(event.data)
 
     # Обновление
-
+    field.draw(screen)
+    pygame.display.update(field.rect)
     # Рендеринг
-    screen.fill(BLUE)
+
     # После отрисовки всего, переворачиваем экран
-    pygame.display.flip()
+
 
 pygame.quit()
