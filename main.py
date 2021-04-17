@@ -1,9 +1,10 @@
 # Pygame шаблон - скелет для нового проекта Pygame
 import pygame
+from models.game import Game
 import random
 
-WIDTH = 360
-HEIGHT = 480
+WIDTH = 480
+HEIGHT = 360
 FPS = 30
 
 # Задаем цвета
@@ -19,17 +20,21 @@ pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
+game = Game(pygame)
 
 # Цикл игры
 running = True
 while running:
     # Держим цикл на правильной скорости
     clock.tick(FPS)
+    game.change_stage('ME')
     # Ввод процесса (события)
     for event in pygame.event.get():
         # check for closing window
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.USEREVENT:
+            print(event.data)
 
     # Обновление
 
