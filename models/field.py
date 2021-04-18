@@ -47,7 +47,25 @@ class Field(EventEmitter):
         return filter(lambda ship: point in ship.get_position_points(), sorted(self._ships, key=lambda x: x.size))
 
     def shoot_to(self, point):
-        pass
+        if point in self._shots:
+            return "cancel"
+        self._shots.add(point)
+        ship = next(self.get_ships_at(point), None)
+        if ship is None:
+            self.emit("updated")
+            return "miss"
+
+        blow = all(map(lambda x: x in self._shots, ship.get_position_points(ship)))
+        if blow:
+            self._shots = self._shots.union(self.get_ship_rounded_points(ship))
+        self.emit("updated")
+        return "hit"
+
+
+    def get_ship_rounded_points(self, ship):
+        return set(filter(lambda p:0<=p.x<self.width and 0<=p.y<self.height,
+                          [p for point in ship.get_position_points() for p in point.get_round_points()]))
+
 
     def change_ship_direction(self, ship):
         if not isinstance(ship, Ship):
@@ -81,15 +99,23 @@ class Field(EventEmitter):
         return True
 
     def get_conflicted_points(self):
-        pass
+        ship_to_round_points = dict([(s,self.get_ship_rounded_points(s)) for s in self._ships])
+        res = set()
+        for ship in self._ships:
+            position_points = ship.get_position_points()
+            for point in position_points:
+                is_point_in_other_ship = any(map(lambda pair: not pair[0]==ship and point in pair[1] ,ship_to_round_points.items()))
+                if is_point_in_other_ship:
+                    res.add(point)
+        return res
 
     def is_alive(self, ship):
         if ship not in self._ships:
             raise ReferenceError
-        return
+        return any(map(lambda point: point not in self._shots, ship.get_position_points()))
 
     def has_alive_ship(self):
-        pass
+        return any(map(lambda ship: self.is_alive(ship), self._ships))
 
     def get_shoots(self):
         return self._shots
