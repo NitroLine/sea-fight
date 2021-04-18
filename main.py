@@ -4,8 +4,8 @@ from models.game import Game
 from views.view import FieldView
 import random
 
-WIDTH = 480
-HEIGHT = 360
+WIDTH = 1080
+HEIGHT = 720
 FPS = 30
 
 # Задаем цвета
@@ -22,8 +22,10 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("SEA FIGHT")
 clock = pygame.time.Clock()
 game = Game(pygame)
-game.start('HUMAN',"AI")
-field = FieldView(50,50,200,200,game.first_player.field)
+game.start('HUMAN', "AI")
+player_field = FieldView(50, 50, 200, 200, game.first_player.field)
+enemy_field = FieldView(350, 50, 200, 200, game.second_player.field)
+screen.fill(WHITE)
 
 # Цикл игры
 running = True
@@ -39,8 +41,9 @@ while running:
             print(event.data)
 
     # Обновление
-    field.draw(screen)
-    pygame.display.update(field.rect)
+    player_field.draw(screen)
+    enemy_field.draw(screen)
+    pygame.display.update()
     # Рендеринг
 
     # После отрисовки всего, переворачиваем экран

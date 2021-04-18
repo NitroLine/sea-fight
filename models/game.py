@@ -2,12 +2,13 @@ from .options import Options
 from .player import Player
 from .model import EventEmitter
 
+
 class Game(EventEmitter):
     first_player = None
     second_player = None
     current_turn = None
 
-    def __init__(self, game = None, settings = None):
+    def __init__(self, game=None, settings=None):
         super().__init__(game)
         self.stage = "not_started"
         if settings is not None:
@@ -15,7 +16,7 @@ class Game(EventEmitter):
         else:
             self.settings = Options()
 
-    def start(self,first_player_name,second_player_name):
+    def start(self, first_player_name, second_player_name):
         self.first_player = self.create_player(first_player_name)
         self.second_player = self.create_player(second_player_name)
         self.current_turn = 1
@@ -37,12 +38,12 @@ class Game(EventEmitter):
     def is_ready_for_battle(self):
         pass
 
-    def create_player(self,name):
+    def create_player(self, name):
         field = self.settings.create_field()
         for ship in self.settings.create_fleet():
             field.add_ship(ship)
-        return Player(name,field)
+        return Player(name, field)
 
-    def change_stage(self,stage):
+    def change_stage(self, stage):
         self.stage = stage
         self.emit('stage_changed')
