@@ -1,13 +1,18 @@
-from pygame import Rect, draw
+from pygame import Rect, draw, USEREVENT
+from .base_view import BaseView
 
-
-class FieldView:
+class FieldView(BaseView):
     def __init__(self, x, y, width, height, field):
         self.x = x
         self.y = y
         self.field = field
         self.rects = self.generate_point_to_rect(width, height)
         self.rect = Rect(x, y, width, height)
+
+    def change_size(self,width,height):
+        self.rect.width = width
+        self.rect.height = height
+        self.rects = self.generate_point_to_rect(width,height)
 
     def generate_point_to_rect(self, width, height):
         res = dict()
@@ -21,6 +26,10 @@ class FieldView:
                 res[(self.x+x, self.y+y)] = rectangle
         return res
 
-    def draw(self, screen):
+    def update(self, surface):
         for rect in self.rects.values():
-            draw.rect(screen, [255, 0, 0], rect, 2)
+            draw.rect(surface, [255, 0, 0], rect, 2)
+
+    def check_event(self,event):
+        if event.type == USEREVENT:
+            print(event.data)
