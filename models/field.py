@@ -13,7 +13,7 @@ class Field(EventEmitter):
 
     def add_ship(self, ship):
         self._ships.add(ship)
-        self.emit('updated')
+        self.emit({'name':'updated'})
 
     def get_ships(self):
         return list(self._ships)
@@ -25,7 +25,7 @@ class Field(EventEmitter):
         if not isinstance(ship, Ship):
             raise TypeError
         if ship not in self._ships:
-            raise ReferenceError
+            raise RuntimeError("Cant find ship")
         if ship.position is not None:
             return False
         if ship.direction == "horizontal":
@@ -37,10 +37,10 @@ class Field(EventEmitter):
         if (0 <= point.x and point.x + dx <= self.width
                 and 0 <= point.y and point.y + dy <= self.height):
             ship.position = point
-            self.emit('updated')
+            self.emit({'name':'updated'})
             return True
         ship.position = None
-        self.emit('updated')
+        self.emit({'name':'updated'})
         return False
 
     def get_ships_at(self, point):
@@ -52,13 +52,13 @@ class Field(EventEmitter):
         self._shots.add(point)
         ship = next(self.get_ships_at(point), None)
         if ship is None:
-            self.emit("updated")
+            self.emit({'name':'updated'})
             return "miss"
 
         blow = all(map(lambda x: x in self._shots, ship.get_position_points(ship)))
         if blow:
             self._shots = self._shots.union(self.get_ship_rounded_points(ship))
-        self.emit("updated")
+        self.emit({'name':'updated'})
         return "hit"
 
 
@@ -71,7 +71,7 @@ class Field(EventEmitter):
         if not isinstance(ship, Ship):
             raise TypeError
         if ship not in self._ships:
-            raise ReferenceError
+            raise RuntimeError("Cant find ship")
         if ship.position is not None:
             return False
         pos = ship.position
@@ -81,7 +81,7 @@ class Field(EventEmitter):
                 new_pos = Point(pos.x, pos.y - overflow)
                 if new_pos.y < 0:
                     ship.position = None
-                    self.emit('updated')
+                    self.emit({'name':'updated'})
                     return False
                 ship.position = new_pos
             ship.direction = "vertical"
@@ -91,11 +91,11 @@ class Field(EventEmitter):
                 new_pos = Point(pos.x - overflow, pos.y)
                 if new_pos.x < 0:
                     ship.position = None
-                    self.emit('updated')
+                    self.emit({'name':'updated'})
                     return False
                 ship.position = new_pos
             ship.direction = "horizontal"
-        self.emit('updated')
+        self.emit({'name':'updated'})
         return True
 
     def get_conflicted_points(self):
@@ -111,7 +111,7 @@ class Field(EventEmitter):
 
     def is_alive(self, ship):
         if ship not in self._ships:
-            raise ReferenceError
+            raise RuntimeError("Cant find ship")
         return any(map(lambda point: point not in self._shots, ship.get_position_points()))
 
     def has_alive_ship(self):

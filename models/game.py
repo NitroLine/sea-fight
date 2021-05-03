@@ -32,11 +32,28 @@ class Game(EventEmitter):
         else:
             return self.second_player
 
-    def is_current_player_win(self):
-        pass
+    @property
+    def next_player(self):
+        if self.current_turn is None:
+            return None
+        if self.current_turn:
+            return self.second_player
+        else:
+            return self.first_player
 
-    def is_ready_for_battle(self):
-        pass
+    def is_current_player_win(self):
+        next_player = self.next_player
+        if next_player is None:
+            return False
+        return not next_player.field.has_alive_ship()
+
+    @staticmethod
+    def is_ready_for_battle(player):
+        return player.field.get_first_to_put_ship() is None and not any(player.field.get_conflicted_points())
+
+    def move_to_next_player(self):
+        self.current_turn = not self.current_turn
+        self.emit({'name':'player_changed','player':self.current_player})
 
     def create_player(self, name):
         field = self.settings.create_field()
@@ -46,4 +63,26 @@ class Game(EventEmitter):
 
     def change_stage(self, stage):
         self.stage = stage
-        self.emit('stage_changed')
+        self.emit({'name':'state_changed', 'new_stage':stage})
+
+    def shoot_to(self,point):
+        if self.stage != "Battle":
+            raise RuntimeError("Can't shoot while not battle")
+
+        shot_result = self.next_player.field.shoot_to(point)
+        if shot_result == "hit":
+            if self.is_current_player_win():
+                self.change_stage('finished')
+            else:
+                self.emit({'name':'ready_to_shoot'})
+        elif shot_result == "miss":
+            self.move_to_next_player()
+            self.emit({'name':'ready_to_shoot'})
+        elif shot_result != 'cancel':
+            raise RuntimeError("Unknown shot result")
+
+    def is_can_begin_battle(self):
+        return self.stage == 'arranging_ships' \
+               and self.is_ready_for_battle(self.first_player)\
+               and self.is_ready_for_battle(self.second_player)
+
