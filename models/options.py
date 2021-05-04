@@ -11,8 +11,8 @@ class Options:
     def set_fleet(self, *fleet):
         self.fleet_sizes = fleet
 
-    def create_field(self):
-        return Field(self.width, self.height)
+    def create_field(self, game):
+        return Field(self.width, self.height, game)
 
     def create_fleet(self):
         for size in self.fleet_sizes:

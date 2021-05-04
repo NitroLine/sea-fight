@@ -25,7 +25,9 @@ class Button(BaseView):
                     "hover_font_color" : None,
                     "clicked_font_color" : None,
                     "click_sound" : None,
-                    "hover_sound" : None}
+                    "hover_sound" : None,
+                    "hidden": False,
+                    }
         for kwarg in kwargs:
             if kwarg in settings:
                 settings[kwarg] = kwargs[kwarg]
@@ -73,19 +75,20 @@ class Button(BaseView):
 
     def update(self,surface):
         """Update needs to be called every frame in the main loop."""
-        color = self.color
-        text = self.text
-        self.check_hover()
-        if self.clicked and self.clicked_color:
-            color = self.clicked_color
-            if self.clicked_font_color:
-                text = self.clicked_text
-        elif self.hovered and self.hover_color:
-            color = self.hover_color
-            if self.hover_font_color:
-                text = self.hover_text
-        surface.fill(pg.Color("black"),self.rect)
-        surface.fill(color,self.rect.inflate(-4,-4))
-        if self.text:
-            text_rect = text.get_rect(center=self.rect.center)
-            surface.blit(text,text_rect)
+        if not self.hidden:
+            color = self.color
+            text = self.text
+            self.check_hover()
+            if self.clicked and self.clicked_color:
+                color = self.clicked_color
+                if self.clicked_font_color:
+                    text = self.clicked_text
+            elif self.hovered and self.hover_color:
+                color = self.hover_color
+                if self.hover_font_color:
+                    text = self.hover_text
+            surface.fill(pg.Color("black"),self.rect)
+            surface.fill(color,self.rect.inflate(-4,-4))
+            if self.text:
+                text_rect = text.get_rect(center=self.rect.center)
+                surface.blit(text,text_rect)

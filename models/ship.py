@@ -11,7 +11,7 @@ class Ship:
         ans = []
         if self.position:
             for i in range(self.size):
-                if self.position == 'horizontal':
+                if self.direction == 'horizontal':
                     ans.append(Point(self.position.x + i, self.position.y))
                 else:
                     ans.append(Point(self.position.x, self.position.y + i))

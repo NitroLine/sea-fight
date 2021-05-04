@@ -19,21 +19,20 @@ class Field(EventEmitter):
         return list(self._ships)
 
     def get_first_to_put_ship(self):
-        return next(filter(lambda x: x.position is not None, sorted(self._ships, key=lambda x: x.size)), None)
+        return next(filter(lambda x: x.position is None, sorted(self._ships, key=lambda x: x.size, reverse=True)), None)
 
     def put_ship(self, ship, point):
         if not isinstance(ship, Ship):
             raise TypeError
         if ship not in self._ships:
             raise RuntimeError("Cant find ship")
-        if ship.position is not None:
-            return False
         if ship.direction == "horizontal":
             dx = ship.size
             dy = 1
         else:
             dx = 1
             dy = ship.size
+
         if (0 <= point.x and point.x + dx <= self.width
                 and 0 <= point.y and point.y + dy <= self.height):
             ship.position = point
@@ -44,7 +43,7 @@ class Field(EventEmitter):
         return False
 
     def get_ships_at(self, point):
-        return filter(lambda ship: point in ship.get_position_points(), sorted(self._ships, key=lambda x: x.size))
+        return filter(lambda ship: point in ship.get_position_points(), sorted(self._ships, key=lambda x: x.size, reverse=True))
 
     def shoot_to(self, point):
         if point in self._shots:
@@ -72,8 +71,6 @@ class Field(EventEmitter):
             raise TypeError
         if ship not in self._ships:
             raise RuntimeError("Cant find ship")
-        if ship.position is not None:
-            return False
         pos = ship.position
         if ship.direction == "horizontal":
             overflow = pos.y + ship.size - self.height
@@ -116,6 +113,7 @@ class Field(EventEmitter):
 
     def has_alive_ship(self):
         return any(map(lambda ship: self.is_alive(ship), self._ships))
+
 
     def get_shoots(self):
         return self._shots

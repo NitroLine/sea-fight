@@ -5,6 +5,7 @@ from views.button import Button
 from views.field import FieldView
 from views.text import Text
 from settings import *
+from controls.putting_ships_control import PuttingShipsControl
 import random
 
 # Создаем игру и окно
@@ -31,6 +32,12 @@ class Window:
             FieldView(WIDTH / 2 - 300, HEIGHT / 2 - 100, 200, 200),
             FieldView(WIDTH / 2 + 100, HEIGHT / 2 - 100, 200, 200)
         ]
+        self.putting_ships = [
+            FieldView(WIDTH / 2 - 200, HEIGHT / 2 - 200, 400, 400),
+            PuttingShipsControl(),
+            Button((100,100,200,50), BLUE, lambda x: x, text="Battle", **BUTTON_STYLE, hidden = True),
+
+        ]
         self.current_scene = self.menu
 
     def exit_from_game(self):
@@ -38,9 +45,9 @@ class Window:
 
     def start_one_player_game(self):
         self.game.start('HUMAN', "AI")
-        self.two_fields[0].setup(self.game.first_player.field, False)
-        self.two_fields[1].setup(self.game.second_player.field, False)
-        self.current_scene = self.two_fields
+        self.putting_ships[0].setup(self.game.first_player.field, False)
+        self.putting_ships[1].setup(self.game, self.putting_ships[2], self.putting_ships[0])
+        self.current_scene = self.putting_ships
 
     def main_loop(self):
         while self.running:
@@ -51,8 +58,6 @@ class Window:
                 # check for closing window
                 if event.type == pygame.QUIT:
                     self.exit_from_game()
-                if event.type == pygame.USEREVENT:
-                    print(event.data)
                 for element in self.current_scene:
                     element.check_event(event)
 

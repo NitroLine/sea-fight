@@ -1,5 +1,6 @@
 from pygame import Rect, draw
 import pygame
+from models.point import Point
 from .base_view import BaseView
 from settings import *
 
@@ -32,7 +33,7 @@ class FieldView(BaseView):
                 top = (height - 2) * y // self.field.height + 1
                 bottom = (height - 2) * (y + 1) // self.field.height + 1
                 rectangle = Rect(self.x+left, self.y+top, right - left, bottom - top)
-                res[(self.x+x, self.y+y)] = rectangle
+                res[Point(x, y)] = rectangle
         return res
 
 
@@ -58,16 +59,10 @@ class FieldView(BaseView):
             self.draw_ship(surface,self.now_selected_ship,conflicted_points,shots,True)
 
 
-
-    def check_event(self,event):
-        if event.type == pygame.USEREVENT:
-            print(event.data)
-        if event.type == pygame.MOUSEBUTTONUP:
-            pos = pygame.mouse.get_pos()
-            for point in self.rects:
-                if self.rects[point].collidepoint(pos):
-                    print(pos, self.rects[point])
-
+    def global_pos_to_local_point(self, pos):
+        for point in self.rects:
+            if self.rects[point].collidepoint(pos):
+                return point
 
 
 class Drawer:
@@ -79,8 +74,8 @@ class Drawer:
     def draw_ship_cell(surface,rect,is_shot,in_conflict,use_light):
         border_color = YELLOW if use_light else LIGHT_BLUE
         color = LIGHT_RED if in_conflict else BLUE
-        draw.rect(surface, rect, color)
-        draw.rect(surface, rect, border_color, 2)
+        draw.rect(surface, color, rect)
+        draw.rect(surface, border_color, rect, 4)
         if is_shot:
             draw.line(surface, GRAY, rect.topleft, rect.bottomright)
             draw.line(surface, GRAY, rect.topright, rect.bottomleft)
