@@ -2,12 +2,18 @@ from pygame import Rect, draw, USEREVENT
 from .base_view import BaseView
 
 class FieldView(BaseView):
-    def __init__(self, x, y, width, height, field):
+    def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
-        self.field = field
-        self.rects = self.generate_point_to_rect(width, height)
+        self.field = None
         self.rect = Rect(x, y, width, height)
+        self.rects = None
+        self.fog_of_war = False
+
+    def setup(self, field, fog_of_war):
+        self.fog_of_war = fog_of_war
+        self.field = field
+        self.rects = self.generate_point_to_rect(self.width, self.height)
 
     def change_size(self,width,height):
         self.rect.width = width

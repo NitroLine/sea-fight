@@ -47,6 +47,10 @@ class Window:
             Button((WIDTH/2-100,HEIGHT/2-40,200,50),BLUE, self.start_one_player_game, text="2 Player", **BUTTON_STYLE),
             Button((WIDTH/2-100,HEIGHT/2+20,200,50),BLUE, self.exit_from_game, text="Exit", **BUTTON_STYLE)
         ]
+        self.two_fields = [
+            FieldView(WIDTH / 2 - 300, HEIGHT / 2 - 100, 200, 200),
+            FieldView(WIDTH / 2 + 100, HEIGHT / 2 - 100, 200, 200)
+        ]
         self.current_scene = self.menu
 
     def exit_from_game(self):
@@ -54,9 +58,9 @@ class Window:
 
     def start_one_player_game(self):
         self.game.start('HUMAN', "AI")
-        player_field = FieldView(WIDTH/2 - 300, HEIGHT/2 - 100, 200, 200, self.game.first_player.field)
-        enemy_field = FieldView(WIDTH/2 + 100, HEIGHT/2 - 100, 200, 200, self.game.second_player.field)
-        self.current_scene = [ player_field, enemy_field]
+        self.two_fields[0].setup(self.game.first_player.field, False)
+        self.two_fields[1].setup(self.game.second_player.field, False)
+        self.current_scene = self.two_fields
 
     def main_loop(self):
         while self.running:
