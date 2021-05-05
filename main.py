@@ -24,30 +24,34 @@ class Window:
         self.running = True
         self.menu = [
             Text("SEA FIGHT", WIDTH/2 - 90, HEIGHT/2-200,BLACK,GAME_FONT),
-            Button((WIDTH/2-100,HEIGHT/2-100,200,50),BLUE, self.start_one_player_game, text="1 Player", **BUTTON_STYLE),
-            Button((WIDTH/2-100,HEIGHT/2-40,200,50),BLUE, self.start_one_player_game, text="2 Player", **BUTTON_STYLE),
+            Button((WIDTH/2-100,HEIGHT/2-100,200,50),BLUE, self.start_two_player_game, text="1 Player", **BUTTON_STYLE),
+            Button((WIDTH/2-100,HEIGHT/2-40,200,50),BLUE, self.start_two_player_game, text="2 Player", **BUTTON_STYLE),
             Button((WIDTH/2-100,HEIGHT/2+20,200,50),BLUE, self.exit_from_game, text="Exit", **BUTTON_STYLE)
         ]
         self.two_fields = [
             FieldView(WIDTH / 2 - 300, HEIGHT / 2 - 100, 200, 200),
             FieldView(WIDTH / 2 + 100, HEIGHT / 2 - 100, 200, 200)
         ]
-        self.putting_ships = [
+        self.putting_ships_first = [
             FieldView(WIDTH / 2 - 200, HEIGHT / 2 - 200, 400, 400),
             PuttingShipsControl(),
-            Button((100,100,200,50), BLUE, lambda x: x, text="Battle", **BUTTON_STYLE, hidden = True),
-
+            Button((100,100,200,50), BLUE, lambda x: x, text="Next", **BUTTON_STYLE, hidden = True),
+        ]
+        self.putting_ships_second = [
+            FieldView(WIDTH / 2 - 200, HEIGHT / 2 - 200, 400, 400),
+            PuttingShipsControl(),
+            Button((100,100,200,50), BLUE, lambda x: x, text="Next", **BUTTON_STYLE, hidden = True),
         ]
         self.current_scene = self.menu
 
     def exit_from_game(self):
         self.running = False
 
-    def start_one_player_game(self):
-        self.game.start('HUMAN', "AI")
-        self.putting_ships[0].setup(self.game.first_player.field, False)
-        self.putting_ships[1].setup(self.game, self.putting_ships[2], self.putting_ships[0])
-        self.current_scene = self.putting_ships
+    def start_two_player_game(self):
+        self.game.start('First', 'Second')
+        self.putting_ships_first[0].setup(self.game.first_player.field, False)
+        self.putting_ships_first[1].setup(self.game, self.putting_ships_first[2], self.putting_ships_first[0])
+        self.current_scene = self.putting_ships_first
 
     def main_loop(self):
         while self.running:
@@ -58,6 +62,12 @@ class Window:
                 # check for closing window
                 if event.type == pygame.QUIT:
                     self.exit_from_game()
+                if event.type == pygame.USEREVENT:
+                    if event.data['name'] == 'player_changed' and self.game.stage == "putting_ships":
+                        self.putting_ships_second[0].setup(self.game.second_player.field, False)
+                        self.putting_ships_second[1].setup(self.game, self.putting_ships_second[2],
+                                                          self.putting_ships_second[0])
+                        self.current_scene = self.putting_ships_second
                 for element in self.current_scene:
                     element.check_event(event)
 

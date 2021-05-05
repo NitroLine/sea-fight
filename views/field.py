@@ -68,21 +68,21 @@ class FieldView(BaseView):
 class Drawer:
     @staticmethod
     def draw_shot_cell(surface, rect):
-        draw.ellipse(surface,LIGHT_BLUE,rect)
+        draw.ellipse(surface,SHOT_CELL_COLOR,rect)
 
     @staticmethod
     def draw_ship_cell(surface,rect,is_shot,in_conflict,use_light):
-        border_color = YELLOW if use_light else LIGHT_BLUE
-        color = LIGHT_RED if in_conflict else BLUE
+        border_color = SELECTED_BORDER_SHIP_COLOR if use_light else BORDER_SHIP_COLOR
+        color = CONFLICTED_SHIP_COLOR if in_conflict else SHIP_COLOR
         draw.rect(surface, color, rect)
         draw.rect(surface, border_color, rect, 4)
         if is_shot:
-            draw.line(surface, GRAY, rect.topleft, rect.bottomright)
-            draw.line(surface, GRAY, rect.topright, rect.bottomleft)
+            draw.line(surface, DESTROY_SHIP_COLOR, rect.topleft, rect.bottomright)
+            draw.line(surface, DESTROY_SHIP_COLOR, rect.topright, rect.bottomleft)
 
     @staticmethod
     def draw_cell(surface, rect):
-        draw.rect(surface, GRAY, rect)
-        draw.rect(surface, LIGHT_BLUE, rect, 2)
+        draw.rect(surface, CELL_COLOR, rect)
+        draw.rect(surface, BORDER_CELL_COLOR, rect, 2)
 
 
