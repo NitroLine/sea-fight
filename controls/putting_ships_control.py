@@ -22,6 +22,8 @@ class PuttingShipsControl(BaseView):
         if mouse_button == 3:
             self.field_view.now_selected_ship = None
         elif mouse_button == 1:
+            if point is None:
+                return
             selected_ship = self.field_view.now_selected_ship
             if selected_ship is not None:
                 if point in selected_ship.get_position_points():
