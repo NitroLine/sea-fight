@@ -54,7 +54,7 @@ class Field(EventEmitter):
             self.emit({'name':'updated'})
             return "miss"
 
-        blow = all(map(lambda x: x in self._shots, ship.get_position_points(ship)))
+        blow = all(map(lambda x: x in self._shots, ship.get_position_points()))
         if blow:
             self._shots = self._shots.union(self.get_ship_rounded_points(ship))
         self.emit({'name':'updated'})

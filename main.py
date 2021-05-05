@@ -6,6 +6,7 @@ from views.field import FieldView
 from views.text import Text
 from settings import *
 from controls.putting_ships_control import PuttingShipsControl
+from controls.fight_control import Fight2PlayerControl
 import random
 
 # Создаем игру и окно
@@ -25,12 +26,13 @@ class Window:
         self.menu = [
             Text("SEA FIGHT", WIDTH/2 - 90, HEIGHT/2-200,BLACK,GAME_FONT),
             Button((WIDTH/2-100,HEIGHT/2-100,200,50),BLUE, self.start_two_player_game, text="1 Player", **BUTTON_STYLE),
-            Button((WIDTH/2-100,HEIGHT/2-40,200,50),BLUE, self.start_two_player_game, text="2 Player", **BUTTON_STYLE),
+            Button((WIDTH/2-100,HEIGHT/2-40,200,50),BLUE, self.start_two_player_game, text="2 Players", **BUTTON_STYLE),
             Button((WIDTH/2-100,HEIGHT/2+20,200,50),BLUE, self.exit_from_game, text="Exit", **BUTTON_STYLE)
         ]
-        self.two_fields = [
-            FieldView(WIDTH / 2 - 300, HEIGHT / 2 - 100, 200, 200),
-            FieldView(WIDTH / 2 + 100, HEIGHT / 2 - 100, 200, 200)
+        self.two_player_fight = [
+            FieldView(WIDTH / 2 - 500, HEIGHT / 2 - 200, 400, 400),
+            FieldView(WIDTH / 2 + 100, HEIGHT / 2 - 200, 400, 400),
+            Fight2PlayerControl()
         ]
         self.putting_ships_first = [
             FieldView(WIDTH / 2 - 200, HEIGHT / 2 - 200, 400, 400),
@@ -68,6 +70,9 @@ class Window:
                         self.putting_ships_second[1].setup(self.game, self.putting_ships_second[2],
                                                           self.putting_ships_second[0])
                         self.current_scene = self.putting_ships_second
+                    if event.data['name'] == 'state_changed' and event.data['new_stage'] == 'battle':
+                        self.two_player_fight[2].setup(self.game,self.two_player_fight[0],self.two_player_fight[1])
+                        self.current_scene = self.two_player_fight
                 for element in self.current_scene:
                     element.check_event(event)
 

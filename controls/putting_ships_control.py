@@ -1,6 +1,7 @@
 from views.base_view import BaseView
 import pygame
-from models.point import Point
+
+
 class PuttingShipsControl(BaseView):
     def __init__(self):
         self.game = None
@@ -12,6 +13,7 @@ class PuttingShipsControl(BaseView):
         self.end_button = end_button
         self.field_view = field_view
         end_button.function = self.end_putting_ships
+
 
 
     def end_putting_ships(self):
@@ -47,6 +49,7 @@ class PuttingShipsControl(BaseView):
         if event.type == pygame.USEREVENT:
             if event.data['name'] == 'updated':
                 self.end_button.hidden = not self.game.is_current_can_end_putting()
+
 
         if event.type == pygame.MOUSEBUTTONUP:
             pos = pygame.mouse.get_pos()
