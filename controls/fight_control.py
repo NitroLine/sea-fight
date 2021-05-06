@@ -1,6 +1,8 @@
-from views.base_view import BaseView
-from controls.AI import SimpleRandomAI
 import pygame
+
+from controls.AI import SimpleRandomAI
+from views.base_view import BaseView
+
 
 class Fight2PlayerControl(BaseView):
     def __init__(self):
@@ -29,11 +31,10 @@ class Fight2PlayerControl(BaseView):
                     return
                 self.game.shoot_to(point)
 
-
     def check_event(self, event):
         if event.type == pygame.MOUSEBUTTONUP:
             pos = pygame.mouse.get_pos()
-            self.click_on_point(pos,event.button)
+            self.click_on_point(pos, event.button)
 
 
 class FightAgainstAIControl(BaseView):
@@ -58,7 +59,6 @@ class FightAgainstAIControl(BaseView):
                 if point is None:
                     return
                 self.game.shoot_to(point)
-
 
     def check_event(self, event):
         if event.type == pygame.MOUSEBUTTONUP:

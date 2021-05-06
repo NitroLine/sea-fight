@@ -9,7 +9,6 @@ class Options:
         self.fleet_sizes = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4]
 
     def set_fleet(self, *fleet):
-
         self.fleet_sizes = fleet
 
     def create_field(self, game):

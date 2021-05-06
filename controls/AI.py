@@ -1,5 +1,8 @@
 import random
+
 from models.point import Point
+
+
 class SimpleRandomAI:
     def __init__(self):
         self.field = None
@@ -10,9 +13,9 @@ class SimpleRandomAI:
     def generate_shot(self):
         shots = self.field.get_shoots()
         for i in range(1000):
-            x = random.randint(0, self.field.width-1)
-            y = random.randint(0, self.field.height-1)
-            p = Point(x,y)
+            x = random.randint(0, self.field.width - 1)
+            y = random.randint(0, self.field.height - 1)
+            p = Point(x, y)
             if p not in shots:
                 return p
         for y in range(self.field.height):
@@ -20,29 +23,28 @@ class SimpleRandomAI:
                 p = Point(x, y)
                 if p not in shots:
                     return p
-        return Point(0,0)
+        return Point(0, 0)
 
-    def try_put_ships(self,try_count):
+    def try_put_ships(self, try_count):
         for i in range(try_count):
             ship = self.field.get_first_to_put_ship()
             if ship is None:
                 break
-            x = random.randint(0, self.field.width-1)
-            y = random.randint(0, self.field.height-1)
-            p = Point(x,y)
-            print(p)
+            x = random.randint(0, self.field.width - 1)
+            y = random.randint(0, self.field.height - 1)
+            p = Point(x, y)
             self.field.put_ship(ship, p)
             if ship.position is None:
                 return
-            if random.randint(0,1):
+            if random.randint(0, 1):
                 self.field.change_ship_direction(ship)
             if any(self.field.get_conflicted_points()):
-                self.field.put_ship(ship, Point(-1,-1))
+                self.field.put_ship(ship, Point(-1, -1))
         return self.field.get_first_to_put_ship() is None and not any(self.field.get_conflicted_points())
 
     def remove_all_ships(self):
         for ship in filter(lambda s: s.position is not None, self.field.get_ships()):
-            self.field.put_ship(ship,Point(-1,-1))
+            self.field.put_ship(ship, Point(-1, -1))
 
     def put_ship_automatic(self):
         for i in range(1000):

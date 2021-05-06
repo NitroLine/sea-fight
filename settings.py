@@ -11,9 +11,9 @@ LIGHT_RED = (200, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 LIGHT_BLUE = (150, 150, 255)
-ORANGE = (255,180,0)
-GRAY = (100,100,100)
-LIGHT_GRAY = (200,200,200)
+ORANGE = (255, 180, 0)
+GRAY = (100, 100, 100)
+LIGHT_GRAY = (200, 200, 200)
 
 BORDER_CELL_COLOR = LIGHT_BLUE
 CELL_COLOR = LIGHT_GRAY
@@ -27,9 +27,7 @@ BORDER_SHIP_COLOR = LIGHT_BLUE
 SELECTED_BORDER_SHIP_COLOR = YELLOW
 CONFLICTED_SHIP_COLOR = LIGHT_RED
 
-
-
-BUTTON_STYLE = {"hover_color" : LIGHT_BLUE,
-                "clicked_color" : WHITE,
-                "clicked_font_color" : BLACK,
-                "hover_font_color" : BLACK}
+BUTTON_STYLE = {"hover_color": LIGHT_BLUE,
+                "clicked_color": WHITE,
+                "clicked_font_color": BLACK,
+                "hover_font_color": BLACK}

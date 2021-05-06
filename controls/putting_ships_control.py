@@ -1,6 +1,7 @@
-from views.base_view import BaseView
-from controls.AI import SimpleRandomAI
 import pygame
+
+from controls.AI import SimpleRandomAI
+from views.base_view import BaseView
 
 
 class PuttingShipsControl(BaseView):
@@ -14,8 +15,6 @@ class PuttingShipsControl(BaseView):
         self.end_button = end_button
         self.field_view = field_view
         end_button.function = self.end_putting_ships
-
-
 
     def end_putting_ships(self):
         self.game.end_putting_current_player_ships()
@@ -35,7 +34,7 @@ class PuttingShipsControl(BaseView):
                     self.game.current_player.field.put_ship(selected_ship, point)
                 self.field_view.now_selected_ship = None
                 return
-            ship_on_point = next(self.game.current_player.field.get_ships_at(point),None)
+            ship_on_point = next(self.game.current_player.field.get_ships_at(point), None)
             if ship_on_point is not None:
                 self.field_view.now_selected_ship = ship_on_point
                 return
@@ -45,16 +44,14 @@ class PuttingShipsControl(BaseView):
                 self.game.current_player.field.put_ship(ship_to_put, point)
                 return
 
-
     def check_event(self, event):
         if event.type == pygame.USEREVENT:
             if event.data['name'] == 'updated':
                 self.end_button.hidden = not self.game.is_current_can_end_putting()
 
-
         if event.type == pygame.MOUSEBUTTONUP:
             pos = pygame.mouse.get_pos()
-            self.click_on_point(pos,event.button)
+            self.click_on_point(pos, event.button)
 
 
 class AIPuttingShipControl(PuttingShipsControl):
@@ -71,7 +68,3 @@ class AIPuttingShipControl(PuttingShipsControl):
                 self.game.end_putting_current_player_ships()
             else:
                 raise RuntimeError("AI can't put all ships to field")
-
-
-
-

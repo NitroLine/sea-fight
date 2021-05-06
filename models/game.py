@@ -1,6 +1,6 @@
+from .model import EventEmitter
 from .options import Options
 from .player import Player
-from .model import EventEmitter
 
 
 class Game(EventEmitter):
@@ -61,7 +61,7 @@ class Game(EventEmitter):
 
     def move_to_next_player(self):
         self.current_turn = not self.current_turn
-        self.emit({'name':'player_changed','player':self.current_player})
+        self.emit({'name': 'player_changed', 'player': self.current_player})
 
     def create_player(self, name):
         field = self.settings.create_field(self.game)
@@ -71,9 +71,9 @@ class Game(EventEmitter):
 
     def change_stage(self, stage):
         self.stage = stage
-        self.emit({'name':'state_changed', 'new_stage':stage})
+        self.emit({'name': 'state_changed', 'new_stage': stage})
 
-    def shoot_to(self,point):
+    def shoot_to(self, point):
         if self.stage != "battle":
             raise RuntimeError("Can't shoot while not battle")
 
@@ -82,19 +82,18 @@ class Game(EventEmitter):
             if self.is_current_player_win():
                 self.change_stage('finished')
             else:
-                self.emit({'name':'ready_to_shoot'})
+                self.emit({'name': 'ready_to_shoot'})
         elif shot_result == "miss":
             self.move_to_next_player()
-            self.emit({'name':'ready_to_shoot'})
+            self.emit({'name': 'ready_to_shoot'})
         elif shot_result != 'cancel':
             raise RuntimeError("Unknown shot result")
 
     def is_can_begin_battle(self):
         return self.stage == 'putting_ships' \
-               and self.is_ready_for_battle(self.first_player)\
+               and self.is_ready_for_battle(self.first_player) \
                and self.is_ready_for_battle(self.second_player)
 
     def is_current_can_end_putting(self):
         return self.stage == 'putting_ships' \
                and self.is_ready_for_battle(self.current_player)
-
