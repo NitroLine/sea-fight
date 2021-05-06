@@ -7,6 +7,7 @@ from views.text import Text
 from settings import *
 from controls.putting_ships_control import PuttingShipsControl
 from controls.fight_control import Fight2PlayerControl
+from models.options import Options
 import random
 
 # Создаем игру и окно
@@ -17,11 +18,15 @@ pygame.display.set_caption("SEA FIGHT")
 
 GAME_FONT = pygame.font.SysFont('Comic Sans MS', 30)
 
+game_options = Options(10,10)
+game_options.set_fleet(10)
+
+
 class Window:
     def __init__(self):
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.clock = pygame.time.Clock()
-        self.game = Game(pygame)
+        self.game = Game(pygame,settings=game_options)
         self.running = True
         self.menu = [
             Text("SEA FIGHT", WIDTH/2 - 90, HEIGHT/2-200,BLACK,GAME_FONT),
@@ -44,6 +49,12 @@ class Window:
             PuttingShipsControl(),
             Button((100,100,200,50), BLUE, lambda x: x, text="Next", **BUTTON_STYLE, hidden = True),
         ]
+        self.end_screen = [
+            Text("Wining", WIDTH / 2 - 90, HEIGHT / 2 - 200, BLACK, GAME_FONT),
+            FieldView(WIDTH / 2 - 500, HEIGHT / 2 - 200, 400, 400),
+            FieldView(WIDTH / 2 + 100, HEIGHT / 2 - 200, 400, 400),
+            Button((WIDTH/2-100,HEIGHT/2+20,200,50),BLUE, self.restart_game, text="To main menu", **BUTTON_STYLE)
+        ]
         self.current_scene = self.menu
 
     def exit_from_game(self):
@@ -54,6 +65,10 @@ class Window:
         self.putting_ships_first[0].setup(self.game.first_player.field, False)
         self.putting_ships_first[1].setup(self.game, self.putting_ships_first[2], self.putting_ships_first[0])
         self.current_scene = self.putting_ships_first
+
+    def restart_game(self):
+        self.game = Game(pygame, game_options)
+        self.current_scene = self.menu
 
     def main_loop(self):
         while self.running:
@@ -73,6 +88,11 @@ class Window:
                     if event.data['name'] == 'state_changed' and event.data['new_stage'] == 'battle':
                         self.two_player_fight[2].setup(self.game,self.two_player_fight[0],self.two_player_fight[1])
                         self.current_scene = self.two_player_fight
+                    if event.data['name'] == 'state_changed' and event.data['new_stage'] == 'finished':
+                        self.end_screen[0].text = self.game.current_player.name + " WIN"
+                        self.end_screen[1].setup(self.game.first_player.field, False)
+                        self.end_screen[2].setup(self.game.second_player.field, False)
+                        self.current_scene = self.end_screen
                 for element in self.current_scene:
                     element.check_event(event)
 

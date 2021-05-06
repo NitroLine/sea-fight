@@ -1,8 +1,6 @@
 from views.base_view import BaseView
 import pygame
 
-
-
 class Fight2PlayerControl(BaseView):
     def __init__(self):
         self.game = None
