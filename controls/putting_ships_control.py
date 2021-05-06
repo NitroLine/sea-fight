@@ -1,4 +1,5 @@
 from views.base_view import BaseView
+from controls.AI import SimpleRandomAI
 import pygame
 
 
@@ -54,4 +55,23 @@ class PuttingShipsControl(BaseView):
         if event.type == pygame.MOUSEBUTTONUP:
             pos = pygame.mouse.get_pos()
             self.click_on_point(pos,event.button)
+
+
+class AIPuttingShipControl(PuttingShipsControl):
+    def __init__(self):
+        super().__init__()
+        self.ai = SimpleRandomAI()
+
+    def end_putting_ships(self):
+        if self.game.current_player == self.game.first_player:
+            self.game.end_putting_current_player_ships()
+        else:
+            self.ai.setup(self.game.current_player.field)
+            if self.ai.put_ship_automatic():
+                self.game.end_putting_current_player_ships()
+            else:
+                raise RuntimeError("AI can't put all ships to field")
+
+
+
 

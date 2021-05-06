@@ -5,8 +5,8 @@ from views.button import Button
 from views.field import FieldView
 from views.text import Text
 from settings import *
-from controls.putting_ships_control import PuttingShipsControl
-from controls.fight_control import Fight2PlayerControl
+from controls.putting_ships_control import PuttingShipsControl, AIPuttingShipControl
+from controls.fight_control import Fight2PlayerControl, FightAgainstAIControl
 from models.options import Options
 import random
 
@@ -28,9 +28,10 @@ class Window:
         self.clock = pygame.time.Clock()
         self.game = Game(pygame,settings=game_options)
         self.running = True
+        self.is_two_player = True
         self.menu = [
             Text("SEA FIGHT", WIDTH/2 - 90, HEIGHT/2-200,BLACK,GAME_FONT),
-            Button((WIDTH/2-100,HEIGHT/2-100,200,50),BLUE, self.start_two_player_game, text="1 Player", **BUTTON_STYLE),
+            Button((WIDTH/2-100,HEIGHT/2-100,200,50),BLUE, self.start_one_player_game, text="1 Player", **BUTTON_STYLE),
             Button((WIDTH/2-100,HEIGHT/2-40,200,50),BLUE, self.start_two_player_game, text="2 Players", **BUTTON_STYLE),
             Button((WIDTH/2-100,HEIGHT/2+20,200,50),BLUE, self.exit_from_game, text="Exit", **BUTTON_STYLE)
         ]
@@ -49,6 +50,16 @@ class Window:
             PuttingShipsControl(),
             Button((100,100,200,50), BLUE, lambda x: x, text="Next", **BUTTON_STYLE, hidden = True),
         ]
+        self.putting_ships_human = [
+            FieldView(WIDTH / 2 - 200, HEIGHT / 2 - 200, 400, 400),
+            AIPuttingShipControl(),
+            Button((100,100,200,50), BLUE, lambda x: x, text="Next", **BUTTON_STYLE, hidden = True),
+        ]
+        self.against_ai_battle_scene = [
+            FieldView(WIDTH / 2 - 500, HEIGHT / 2 - 200, 400, 400),
+            FieldView(WIDTH / 2 + 100, HEIGHT / 2 - 200, 400, 400),
+            FightAgainstAIControl()
+        ]
         self.end_screen = [
             Text("Wining", WIDTH / 2 - 90, HEIGHT / 2 - 200, BLACK, GAME_FONT),
             FieldView(WIDTH / 2 - 500, HEIGHT / 2 - 200, 400, 400),
@@ -64,7 +75,15 @@ class Window:
         self.game.start('First', 'Second')
         self.putting_ships_first[0].setup(self.game.first_player.field, False)
         self.putting_ships_first[1].setup(self.game, self.putting_ships_first[2], self.putting_ships_first[0])
+        self.is_two_player = True
         self.current_scene = self.putting_ships_first
+
+    def start_one_player_game(self):
+        self.game.start('Human','AI')
+        self.putting_ships_human[0].setup(self.game.first_player.field, False)
+        self.is_two_player = False
+        self.putting_ships_human[1].setup(self.game, self.putting_ships_human[2], self.putting_ships_human[0])
+        self.current_scene = self.putting_ships_human
 
     def restart_game(self):
         self.game = Game(pygame, game_options)
@@ -80,14 +99,18 @@ class Window:
                 if event.type == pygame.QUIT:
                     self.exit_from_game()
                 if event.type == pygame.USEREVENT:
-                    if event.data['name'] == 'player_changed' and self.game.stage == "putting_ships":
+                    if event.data['name'] == 'player_changed' and self.game.stage == "putting_ships" and self.is_two_player:
                         self.putting_ships_second[0].setup(self.game.second_player.field, False)
                         self.putting_ships_second[1].setup(self.game, self.putting_ships_second[2],
                                                           self.putting_ships_second[0])
                         self.current_scene = self.putting_ships_second
                     if event.data['name'] == 'state_changed' and event.data['new_stage'] == 'battle':
-                        self.two_player_fight[2].setup(self.game,self.two_player_fight[0],self.two_player_fight[1])
-                        self.current_scene = self.two_player_fight
+                        if self.is_two_player:
+                            self.two_player_fight[2].setup(self.game,self.two_player_fight[0],self.two_player_fight[1])
+                            self.current_scene = self.two_player_fight
+                        else:
+                            self.against_ai_battle_scene[2].setup(self.game,self.against_ai_battle_scene[0],self.against_ai_battle_scene[1])
+                            self.current_scene = self.against_ai_battle_scene
                     if event.data['name'] == 'state_changed' and event.data['new_stage'] == 'finished':
                         self.end_screen[0].text = self.game.current_player.name + " WIN"
                         self.end_screen[1].setup(self.game.first_player.field, False)
