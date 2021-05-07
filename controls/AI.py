@@ -2,6 +2,7 @@ import random
 
 from models.point import Point
 
+
 class BaseAI:
     def __init__(self):
         self.field = None
@@ -14,6 +15,7 @@ class BaseAI:
 
     def put_ship_automatic(self):
         pass
+
 
 class SimpleRandomAI(BaseAI):
     def generate_shot(self):
