@@ -62,7 +62,7 @@ class AIPuttingShipControl(PuttingShipsControl):
     def end_putting_ships(self):
         if self.game.current_player == self.game.first_player:
             self.game.end_putting_current_player_ships()
-        else:
+        if self.game.current_player == self.game.second_player:
             self.ai.setup(self.game.current_player.field)
             if self.ai.put_ship_automatic():
                 self.game.end_putting_current_player_ships()

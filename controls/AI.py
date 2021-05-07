@@ -2,14 +2,20 @@ import random
 
 from models.point import Point
 
-
-class SimpleRandomAI:
+class BaseAI:
     def __init__(self):
         self.field = None
 
     def setup(self, field):
         self.field = field
 
+    def generate_shot(self):
+        pass
+
+    def put_ship_automatic(self):
+        pass
+
+class SimpleRandomAI(BaseAI):
     def generate_shot(self):
         shots = self.field.get_shoots()
         for i in range(1000):

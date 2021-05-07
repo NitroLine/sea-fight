@@ -22,6 +22,7 @@ game_options = Options(10, 10)
 game_options.set_fleet(10)
 
 
+
 class Window:
     def __init__(self):
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -40,27 +41,35 @@ class Window:
         self.two_player_fight = [
             FieldView(WIDTH / 2 - 500, HEIGHT / 2 - 200, 400, 400),
             FieldView(WIDTH / 2 + 100, HEIGHT / 2 - 200, 400, 400),
-            Fight2PlayerControl()
+            Fight2PlayerControl(),
+            Text("First Player Field", WIDTH / 2 - 500, HEIGHT / 2 - 250, BLACK, GAME_FONT),
+            Text("Second Player Field", WIDTH / 2 + 100, HEIGHT / 2 - 250, BLACK, GAME_FONT),
+            Text("First Player Turn", WIDTH / 2 - 100, HEIGHT / 2 - 350, BLACK, GAME_FONT),
         ]
         self.putting_ships_first = [
             FieldView(WIDTH / 2 - 200, HEIGHT / 2 - 200, 400, 400),
             PuttingShipsControl(),
             Button((100, 100, 200, 50), BLUE, lambda x: x, text="Next", **BUTTON_STYLE, hidden=True),
+            Text("First player arranges ships", WIDTH / 2 - 100, HEIGHT / 2 - 350, BLACK, GAME_FONT),
         ]
         self.putting_ships_second = [
             FieldView(WIDTH / 2 - 200, HEIGHT / 2 - 200, 400, 400),
             PuttingShipsControl(),
             Button((100, 100, 200, 50), BLUE, lambda x: x, text="Next", **BUTTON_STYLE, hidden=True),
+            Text("Second player arranges ships", WIDTH / 2 - 100, HEIGHT / 2 - 350, BLACK, GAME_FONT),
         ]
         self.putting_ships_human = [
             FieldView(WIDTH / 2 - 200, HEIGHT / 2 - 200, 400, 400),
             AIPuttingShipControl(),
             Button((100, 100, 200, 50), BLUE, lambda x: x, text="Next", **BUTTON_STYLE, hidden=True),
+            Text("Arrange your ships", WIDTH / 2 - 100, HEIGHT / 2 - 350, BLACK, GAME_FONT),
         ]
         self.against_ai_battle_scene = [
             FieldView(WIDTH / 2 - 500, HEIGHT / 2 - 200, 400, 400),
             FieldView(WIDTH / 2 + 100, HEIGHT / 2 - 200, 400, 400),
-            FightAgainstAIControl()
+            FightAgainstAIControl(),
+            Text("Human Field", WIDTH / 2 - 500, HEIGHT / 2 - 300, BLACK, GAME_FONT),
+            Text("AI Field", WIDTH / 2 + 100, HEIGHT / 2 - 300, BLACK, GAME_FONT),
         ]
         self.end_screen = [
             Text("Wining", WIDTH / 2 - 90, HEIGHT / 2 - 200, BLACK, GAME_FONT),
@@ -122,6 +131,8 @@ class Window:
                         self.end_screen[1].setup(self.game.first_player.field, False)
                         self.end_screen[2].setup(self.game.second_player.field, False)
                         self.current_scene = self.end_screen
+                    if event.data['name'] == 'player_changed' and self.game.stage == "battle" and self.is_two_player:
+                        self.two_player_fight[5].text = event.data['player'].name + " Turn"
                 for element in self.current_scene:
                     element.check_event(event)
 
