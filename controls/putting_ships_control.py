@@ -1,6 +1,6 @@
 import pygame
 
-from controls.AI import SimpleRandomAI
+from controls.AI import SimpleRandomAI, AutomaticPutShip
 from views.base_view import BaseView
 
 
@@ -9,11 +9,15 @@ class PuttingShipsControl(BaseView):
         self.game = None
         self.end_button = None
         self.field_view = None
+        self.auto_put = None
 
     def setup(self, game, end_button, field_view):
         self.game = game
         self.end_button = end_button
         self.field_view = field_view
+        auto_put = AutomaticPutShip()
+        auto_put.setup(field_view.field)
+        auto_put.put_ship_automatic()
         end_button.function = self.end_putting_ships
 
     def end_putting_ships(self):

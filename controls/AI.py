@@ -17,22 +17,7 @@ class BaseAI:
         pass
 
 
-class SimpleRandomAI(BaseAI):
-    def generate_shot(self):
-        shots = self.field.get_shoots()
-        for i in range(1000):
-            x = random.randint(0, self.field.width - 1)
-            y = random.randint(0, self.field.height - 1)
-            p = Point(x, y)
-            if p not in shots:
-                return p
-        for y in range(self.field.height):
-            for x in range(self.field.width):
-                p = Point(x, y)
-                if p not in shots:
-                    return p
-        return Point(0, 0)
-
+class AutomaticPutShip(BaseAI):
     def try_put_ships(self, try_count):
         for i in range(try_count):
             ship = self.field.get_first_to_put_ship()
@@ -60,3 +45,22 @@ class SimpleRandomAI(BaseAI):
             if self.try_put_ships(1000):
                 return True
         return False
+
+
+
+class SimpleRandomAI(AutomaticPutShip):
+    def generate_shot(self):
+        shots = self.field.get_shoots()
+        for i in range(1000):
+            x = random.randint(0, self.field.width - 1)
+            y = random.randint(0, self.field.height - 1)
+            p = Point(x, y)
+            if p not in shots:
+                return p
+        for y in range(self.field.height):
+            for x in range(self.field.width):
+                p = Point(x, y)
+                if p not in shots:
+                    return p
+        return Point(0, 0)
+

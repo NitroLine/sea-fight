@@ -1,4 +1,3 @@
-# Pygame шаблон - скелет для нового проекта Pygame
 import pygame
 
 from controls.fight_control import Fight2PlayerControl, FightAgainstAIControl
@@ -19,7 +18,6 @@ pygame.display.set_caption("SEA FIGHT")
 GAME_FONT = pygame.font.SysFont('Comic Sans MS', 30)
 
 game_options = Options(10, 10)
-game_options.set_fleet(10)
 
 
 class Window:
