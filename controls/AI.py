@@ -47,10 +47,27 @@ class AutomaticPutShip(BaseAI):
         return False
 
 
-
 class SimpleRandomAI(AutomaticPutShip):
-    def generate_shot(self):
+    def generate_shot(self, turns):
         shots = self.field.get_shoots()
+        for i in range(0, len(turns)):
+            if turns[-1 - i]['status']:
+                print(1)
+                last_hit = turns[-1 - i]['point']
+                if not self.is_all_around_points_shots(last_hit, shots):
+                    print(2)
+                    if not self.is_left_point_hit(last_hit, turns) and not self.is_left_point_shot(last_hit, shots):
+                        print(3)
+                        return Point(last_hit.x - 1, last_hit.y)
+                    if not self.is_right_point_hit(last_hit, turns) and not self.is_right_point_shot(last_hit, shots):
+                        print(4)
+                        return Point(last_hit.x + 1, last_hit.y)
+                    if not self.is_up_point_hit(last_hit, turns) and not self.is_up_point_shot(last_hit, shots):
+                        print(5)
+                        return Point(last_hit.x, last_hit.y - 1)
+                    if not self.is_bottom_point_hit(last_hit, turns) and not self.is_bottom_point_shot(last_hit, shots):
+                        print(6)
+                        return Point(last_hit.x, last_hit.y + 1)
         for i in range(1000):
             x = random.randint(0, self.field.width - 1)
             y = random.randint(0, self.field.height - 1)
@@ -64,3 +81,54 @@ class SimpleRandomAI(AutomaticPutShip):
                     return p
         return Point(0, 0)
 
+    @staticmethod
+    def is_all_around_points_shots(point, shots):
+        points = point.get_round_points()
+        for t in points:
+            if t not in shots:
+                return False
+        return True
+
+    @staticmethod
+    def is_left_point_hit(point, turns):
+        for turn in turns:
+            if turn['status'] and turn['point'] == Point(point.x - 1, point.y):
+                return True
+        return False
+
+    @staticmethod
+    def is_right_point_hit(point, turns):
+        for turn in turns:
+            if turn['status'] and turn['point'] == Point(point.x + 1, point.y):
+                return True
+        return False
+
+    @staticmethod
+    def is_bottom_point_hit(point, turns):
+        for turn in turns:
+            if turn['status'] and turn['point'] == Point(point.x, point.y - 1):
+                return True
+        return False
+
+    @staticmethod
+    def is_up_point_hit(point, turns):
+        for turn in turns:
+            if turn['status'] and turn['point'] == Point(point.x, point.y + 1):
+                return True
+        return False
+
+    @staticmethod
+    def is_left_point_shot(point, shots):
+        return Point(point.x - 1, point.y) in shots
+
+    @staticmethod
+    def is_right_point_shot(point, shots):
+        return Point(point.x + 1, point.y) in shots
+
+    @staticmethod
+    def is_up_point_shot(point, shots):
+        return Point(point.x, point.y + 1) in shots
+
+    @staticmethod
+    def is_bottom_point_shot(point, shots):
+        return Point(point.x, point.y - 1) in shots
