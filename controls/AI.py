@@ -50,9 +50,7 @@ class AutomaticPutShip(BaseAI):
 class SimpleRandomAI(AutomaticPutShip):
     def generate_shot(self, turns):
         shots = self.field.get_shoots()
-        print(turns)
         for i in range(len(turns)-1,-1,-1):
-            print(i)
             if turns[i]['status']:
                 last_hit = turns[i]['point']
                 if not self.is_all_around_points_shots(last_hit, shots):
