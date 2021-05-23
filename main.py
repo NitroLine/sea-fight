@@ -20,7 +20,6 @@ GAME_FONT = pygame.font.SysFont('Comic Sans MS', 30)
 
 game_options = Options(10, 10)
 
-
 class Window:
     def __init__(self):
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))

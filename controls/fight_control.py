@@ -43,6 +43,7 @@ class FightAgainstAIControl(BaseView):
         self.player_field = None
         self.ai_field = None
         self.ai = SimpleRandomAI()
+        self.ai_turns = []
 
     def setup(self, game, player_field, ai_field):
         self.game = game
@@ -68,5 +69,6 @@ class FightAgainstAIControl(BaseView):
             if event.data['name'] == 'ready_to_shoot':
                 if self.game.stage == 'battle' and self.game.current_player == self.game.second_player:
                     self.ai.setup(self.game.first_player.field)
-                    shot = self.ai.generate_shot()
-                    self.game.shoot_to(shot)
+                    shot = self.ai.generate_shot(turns=self.ai_turns)
+                    self.ai_turns.append(self.game.shoot_to(shot))
+

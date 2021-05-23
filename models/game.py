@@ -76,9 +76,10 @@ class Game(EventEmitter):
     def shoot_to(self, point):
         if self.stage != "battle":
             raise RuntimeError("Can't shoot while not battle")
-
+        status = False
         shot_result = self.next_player.field.shoot_to(point)
         if shot_result == "hit":
+            status = True
             if self.is_current_player_win():
                 self.change_stage('finished')
             else:
@@ -88,6 +89,8 @@ class Game(EventEmitter):
             self.emit({'name': 'ready_to_shoot'})
         elif shot_result != 'cancel':
             raise RuntimeError("Unknown shot result")
+
+        return {'point': point, 'status': status}
 
     def is_can_begin_battle(self):
         return self.stage == 'putting_ships' \
