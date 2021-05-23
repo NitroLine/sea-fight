@@ -10,7 +10,7 @@ class BaseAI:
     def setup(self, field):
         self.field = field
 
-    def generate_shot(self):
+    def generate_shot(self, turns):
         pass
 
     def put_ship_automatic(self):
@@ -50,24 +50,45 @@ class AutomaticPutShip(BaseAI):
 class SimpleRandomAI(AutomaticPutShip):
     def generate_shot(self, turns):
         shots = self.field.get_shoots()
-        for i in range(0, len(turns)):
-            if turns[-1 - i]['status']:
-                print(1)
-                last_hit = turns[-1 - i]['point']
+        print(turns)
+        for i in range(len(turns)-1,-1,-1):
+            print(i)
+            if turns[i]['status']:
+                last_hit = turns[i]['point']
                 if not self.is_all_around_points_shots(last_hit, shots):
-                    print(2)
-                    if not self.is_left_point_hit(last_hit, turns) and not self.is_left_point_shot(last_hit, shots):
-                        print(3)
-                        return Point(last_hit.x - 1, last_hit.y)
-                    if not self.is_right_point_hit(last_hit, turns) and not self.is_right_point_shot(last_hit, shots):
-                        print(4)
-                        return Point(last_hit.x + 1, last_hit.y)
-                    if not self.is_up_point_hit(last_hit, turns) and not self.is_up_point_shot(last_hit, shots):
-                        print(5)
-                        return Point(last_hit.x, last_hit.y - 1)
-                    if not self.is_bottom_point_hit(last_hit, turns) and not self.is_bottom_point_shot(last_hit, shots):
-                        print(6)
-                        return Point(last_hit.x, last_hit.y + 1)
+                    if self.is_right_point_hit(last_hit, turns) and not self.is_left_point_shot(last_hit, shots):
+                        point = Point(last_hit.x - 1, last_hit.y)
+                        if self.field.is_inside_field(point):
+                            return point
+                    if self.is_left_point_hit(last_hit, turns) and not self.is_right_point_shot(last_hit, shots):
+                        point = Point(last_hit.x + 1, last_hit.y)
+                        if self.field.is_inside_field(point):
+                            return point
+                    if self.is_bottom_point_hit(last_hit, turns) and not self.is_up_point_shot(last_hit, shots):
+                        point = Point(last_hit.x, last_hit.y + 1)
+                        if self.field.is_inside_field(point):
+                            return point
+                    if self.is_up_point_hit(last_hit, turns) and not self.is_bottom_point_shot(last_hit, shots):
+                        point = Point(last_hit.x, last_hit.y - 1)
+                        if self.field.is_inside_field(point):
+                            return point
+                    if not self.is_any_around_points_hit(last_hit, turns):
+                        if not self.is_left_point_shot(last_hit,shots):
+                            point = Point(last_hit.x - 1, last_hit.y)
+                            if self.field.is_inside_field(point):
+                                return point
+                        if not self.is_right_point_shot(last_hit,shots):
+                            point = Point(last_hit.x + 1, last_hit.y)
+                            if self.field.is_inside_field(point):
+                                return point
+                        if not self.is_up_point_shot(last_hit,shots):
+                            point = Point(last_hit.x, last_hit.y + 1)
+                            if self.field.is_inside_field(point):
+                                return point
+                        if not self.is_bottom_point_shot(last_hit,shots):
+                            point = Point(last_hit.x, last_hit.y - 1)
+                            if self.field.is_inside_field(point):
+                                return point
         for i in range(1000):
             x = random.randint(0, self.field.width - 1)
             y = random.randint(0, self.field.height - 1)
@@ -90,9 +111,17 @@ class SimpleRandomAI(AutomaticPutShip):
         return True
 
     @staticmethod
+    def is_any_around_points_hit(point, turns):
+        return SimpleRandomAI.is_left_point_hit(point,turns)\
+               or SimpleRandomAI.is_right_point_hit(point,turns)\
+               or SimpleRandomAI.is_up_point_hit(point,turns)\
+               or SimpleRandomAI.is_bottom_point_hit(point,turns)
+
+
+    @staticmethod
     def is_left_point_hit(point, turns):
         for turn in turns:
-            if turn['status'] and turn['point'] == Point(point.x - 1, point.y):
+            if turn['status'] and turn['point'] == Point(point.x - 1, point.y) :
                 return True
         return False
 

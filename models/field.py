@@ -42,6 +42,9 @@ class Field(EventEmitter):
         self.emit({'name': 'updated'})
         return False
 
+    def is_inside_field(self,point):
+        return 0 <= point.x < self.width and 0 <= point.y < self.height
+
     def get_ships_at(self, point):
         return filter(lambda ship: point in ship.get_position_points(),
                       sorted(self._ships, key=lambda x: x.size, reverse=True))
@@ -62,7 +65,7 @@ class Field(EventEmitter):
         return "hit"
 
     def get_ship_rounded_points(self, ship):
-        return set(filter(lambda p: 0 <= p.x < self.width and 0 <= p.y < self.height,
+        return set(filter(self.is_inside_field,
                           [p for point in ship.get_position_points() for p in point.get_round_points()]))
 
     def change_ship_direction(self, ship):

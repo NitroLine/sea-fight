@@ -71,3 +71,4 @@ class FightAgainstAIControl(BaseView):
                     self.ai.setup(self.game.first_player.field)
                     shot = self.ai.generate_shot(turns=self.ai_turns)
                     self.ai_turns.append(self.game.shoot_to(shot))
+
