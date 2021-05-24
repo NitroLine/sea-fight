@@ -4,7 +4,7 @@ from .point import Point
 class Ship:
     def __init__(self, size):
         self.size = size
-        self.direction = None
+        self.direction = 'horizontal'
         self.position = None
 
     def get_position_points(self):
