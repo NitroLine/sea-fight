@@ -47,7 +47,7 @@ class Field(EventEmitter):
 
     def get_ships_at(self, point):
         return filter(lambda ship: point in ship.get_position_points(),
-                      sorted(self._ships, key=lambda x: x.size, reverse=True))
+                      sorted(self._ships, key=lambda x: x.size))
 
     def shoot_to(self, point):
         if point in self._shots:
@@ -74,6 +74,8 @@ class Field(EventEmitter):
         if ship not in self._ships:
             raise RuntimeError("Cant find ship")
         pos = ship.position
+        if pos is None:
+            return False
         if ship.direction == "horizontal":
             overflow = pos.y + ship.size - self.height
             if overflow > 0:
