@@ -1,6 +1,6 @@
 from .model import EventEmitter
 from .point import Point
-from .ship import Ship
+from .ship import Ship,directions_for_size
 
 
 class Field(EventEmitter):
@@ -26,15 +26,8 @@ class Field(EventEmitter):
             raise TypeError
         if ship not in self._ships:
             raise RuntimeError("Cant find ship")
-        if ship.direction == "horizontal":
-            dx = ship.size
-            dy = 1
-        else:
-            dx = 1
-            dy = ship.size
-
-        if (0 <= point.x and point.x + dx <= self.width
-                and 0 <= point.y and point.y + dy <= self.height):
+        if (0 <= point.x and point.x + ship.dx < self.width
+                and 0 <= point.y and point.y + ship.dy < self.height):
             ship.position = point
             self.emit({'name': 'updated'})
             return True
@@ -68,6 +61,20 @@ class Field(EventEmitter):
         return set(filter(self.is_inside_field,
                           [p for point in ship.get_position_points() for p in point.get_round_points()]))
 
+    def check_overflow_and_reset(self, ship):
+        pos = ship.position
+        if pos is None:
+            return False
+        overflow_y = pos.y + ship.dy - self.height +1
+        overflow_x = pos.x + ship.dx - self.width + 1
+        if overflow_y > 0 or overflow_x > 0:
+            new_pos = Point(pos.x - max(0, overflow_x), pos.y - max(0, overflow_y))
+            if new_pos.y < 0 or new_pos.x < 0:
+                ship.position = None
+                return False
+            ship.position = new_pos
+        return True
+
     def change_ship_direction(self, ship):
         if not isinstance(ship, Ship):
             raise TypeError
@@ -76,26 +83,18 @@ class Field(EventEmitter):
         pos = ship.position
         if pos is None:
             return False
-        if ship.direction == "horizontal":
-            overflow = pos.y + ship.size - self.height
-            if overflow > 0:
-                new_pos = Point(pos.x, pos.y - overflow)
-                if new_pos.y < 0:
-                    ship.position = None
-                    self.emit({'name': 'updated'})
-                    return False
-                ship.position = new_pos
-            ship.direction = "vertical"
-        else:
-            overflow = pos.x + ship.size - self.width
-            if overflow > 0:
-                new_pos = Point(pos.x - overflow, pos.y)
-                if new_pos.x < 0:
-                    ship.position = None
-                    self.emit({'name': 'updated'})
-                    return False
-                ship.position = new_pos
-            ship.direction = "horizontal"
+        directions = directions_for_size[ship.size]
+        cur_direction = ship.direction
+        cur_direction_index = directions.index(cur_direction)
+        next_direction_index =  cur_direction_index + 1
+        if next_direction_index >= len(directions):
+            next_direction_index = 0
+        next_direction = directions[next_direction_index]
+        ship.direction = next_direction
+        if not self.check_overflow_and_reset(ship):
+            ship.direction = cur_direction
+            self.emit({'name': 'updated'})
+            return False
         self.emit({'name': 'updated'})
         return True
 

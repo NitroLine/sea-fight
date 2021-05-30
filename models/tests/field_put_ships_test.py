@@ -3,6 +3,7 @@ from ..field import Field
 from ..point import Point
 import pytest
 
+# TODO Change test for new ships rotation
 
 class TestFieldPutShips:
     def setup(self):

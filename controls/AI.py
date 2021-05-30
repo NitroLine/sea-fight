@@ -1,6 +1,7 @@
 import random
 
 from models.point import Point
+from models.ship import directions_for_size
 
 
 class BaseAI:
@@ -29,7 +30,7 @@ class AutomaticPutShip(BaseAI):
             self.field.put_ship(ship, p)
             if ship.position is None:
                 return
-            if random.randint(0, 1):
+            for j in range(random.randint(0, len(directions_for_size[ship.size]))):
                 self.field.change_ship_direction(ship)
             if any(self.field.get_conflicted_points()):
                 self.field.put_ship(ship, Point(-1, -1))
