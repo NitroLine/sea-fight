@@ -55,39 +55,22 @@ class SimpleRandomAI(AutomaticPutShip):
             if turns[i]['status']:
                 last_hit = turns[i]['point']
                 if not self.is_all_around_points_shots(last_hit, shots):
-                    if self.is_right_point_hit(last_hit, turns) and not self.is_left_point_shot(last_hit, shots):
+                    if not self.is_left_point_shot(last_hit, shots):
                         point = Point(last_hit.x - 1, last_hit.y)
                         if self.field.is_inside_field(point):
                             return point
-                    if self.is_left_point_hit(last_hit, turns) and not self.is_right_point_shot(last_hit, shots):
+                    if not self.is_right_point_shot(last_hit, shots):
                         point = Point(last_hit.x + 1, last_hit.y)
                         if self.field.is_inside_field(point):
                             return point
-                    if self.is_bottom_point_hit(last_hit, turns) and not self.is_up_point_shot(last_hit, shots):
+                    if  not self.is_up_point_shot(last_hit, shots):
                         point = Point(last_hit.x, last_hit.y + 1)
                         if self.field.is_inside_field(point):
                             return point
-                    if self.is_up_point_hit(last_hit, turns) and not self.is_bottom_point_shot(last_hit, shots):
+                    if not self.is_bottom_point_shot(last_hit, shots):
                         point = Point(last_hit.x, last_hit.y - 1)
                         if self.field.is_inside_field(point):
                             return point
-                    if not self.is_any_around_points_hit(last_hit, turns):
-                        if not self.is_left_point_shot(last_hit, shots):
-                            point = Point(last_hit.x - 1, last_hit.y)
-                            if self.field.is_inside_field(point):
-                                return point
-                        if not self.is_right_point_shot(last_hit, shots):
-                            point = Point(last_hit.x + 1, last_hit.y)
-                            if self.field.is_inside_field(point):
-                                return point
-                        if not self.is_up_point_shot(last_hit, shots):
-                            point = Point(last_hit.x, last_hit.y + 1)
-                            if self.field.is_inside_field(point):
-                                return point
-                        if not self.is_bottom_point_shot(last_hit, shots):
-                            point = Point(last_hit.x, last_hit.y - 1)
-                            if self.field.is_inside_field(point):
-                                return point
         for i in range(1000):
             x = random.randint(0, self.field.width - 1)
             y = random.randint(0, self.field.height - 1)
