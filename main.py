@@ -81,7 +81,28 @@ class Window:
                                      text="To main menu",
                                      **BUTTON_STYLE)
         }
+        self.pause_scene = {
+            'title': Text("Paused", WIDTH / 2 - 90, HEIGHT / 2 - 200, BLACK, GAME_FONT),
+            'resume': Button((WIDTH / 2 - 100, HEIGHT / 2 - 100, 200, 50), BLUE,
+                                            self.resume_game, text="Resume",
+                                            **BUTTON_STYLE),
+            'to_menu': Button((WIDTH / 2 - 100, HEIGHT / 2 - 40, 200, 50), BLUE,
+                                            self.restart_game, text="To menu",
+                                            **BUTTON_STYLE),
+        }
         self.current_scene = self.menu
+        self.last_scene = self.menu
+
+    def pause_game(self):
+        if self.is_two_player and self.current_scene == self.two_player_fight:
+            self.two_player_fight['timer'].pause()
+        self.last_scene = self.current_scene
+        self.current_scene = self.pause_scene
+
+    def resume_game(self):
+        if self.is_two_player and self.last_scene == self.two_player_fight:
+            self.two_player_fight['timer'].resume()
+        self.current_scene = self.last_scene
 
     def exit_from_game(self):
         self.running = False
@@ -117,32 +138,30 @@ class Window:
                 # check for closing window
                 if event.type == pygame.QUIT:
                     self.exit_from_game()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        self.pause_game()
                 if event.type == pygame.USEREVENT:
                     if event.data['name'] == 'player_changed' \
                             and self.game.stage == "putting_ships" \
                             and self.is_two_player:
                         self.putting_ships_second['player_field'].setup(self.game.second_player.field, False)
                         self.putting_ships_second['putting_ships_controller'].setup(self.game,
-                                                                                    self.putting_ships_second[
-                                                                                        'go_next_button'],
-                                                                                    self.putting_ships_second[
-                                                                                        'player_field'])
+                                                                                    self.putting_ships_second['go_next_button'],
+                                                                                    self.putting_ships_second['player_field'])
                         self.current_scene = self.putting_ships_second
                     if event.data['name'] == 'state_changed' \
                             and event.data['new_stage'] == 'battle':
                         if self.is_two_player:
                             self.two_player_fight['fight_controller'].setup(self.game,
                                                                             self.two_player_fight['first_player_field'],
-                                                                            self.two_player_fight[
-                                                                                'second_player_field'])
+                                                                            self.two_player_fight['second_player_field'])
                             self.two_player_fight['timer'].setup(pygame, 60, self.game.move_to_next_player)
                             self.current_scene = self.two_player_fight
                         else:
                             self.against_ai_battle_scene['fight_controller'].setup(self.game,
-                                                                                   self.against_ai_battle_scene[
-                                                                                       'player_field'],
-                                                                                   self.against_ai_battle_scene[
-                                                                                       'ai_field'])
+                                                                                   self.against_ai_battle_scene['player_field'],
+                                                                                   self.against_ai_battle_scene['ai_field'])
                             self.current_scene = self.against_ai_battle_scene
                     if event.data['name'] == 'state_changed' \
                             and event.data['new_stage'] == 'finished':
