@@ -1,5 +1,5 @@
-from ..ship import Ship
 from ..point import Point
+from ..ship import Ship
 
 
 def test_create_not_placed_horizontal_ship():
@@ -12,7 +12,7 @@ def test_create_not_placed_horizontal_ship():
 def test_get_position_points_return_nothing_when_not_placed():
     ship = Ship(3)
     ship.position = None
-    assert list(ship.get_position_points()) == [ ]
+    assert list(ship.get_position_points()) == []
 
 
 def test_get_position_points_when_horizontal():

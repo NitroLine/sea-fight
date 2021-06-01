@@ -1,7 +1,9 @@
-from ..ship import Ship
+import pytest
+
 from ..field import Field
 from ..point import Point
-import pytest
+from ..ship import Ship
+
 
 # TODO Change test for new ships rotation
 
@@ -45,7 +47,8 @@ class TestFieldPutShips:
             self.field.put_ship(other_ship, point)
         assert e.type == RuntimeError
 
-    def test_change_ship_direction_remove_ship_when_can_not_move_horizontal(self):
+    def test_change_ship_direction_remove_ship_when_can_not_move_horizontal(
+            self):
         field = Field(3, 2)
         ship = Ship(3)
         field.add_ship(ship)
@@ -55,12 +58,12 @@ class TestFieldPutShips:
         assert ship.position is None
 
     def test_get_conflicted_points_no_ships(self):
-        assert list(self.field.get_conflicted_points()) == [ ]
+        assert list(self.field.get_conflicted_points()) == []
 
     def test_get_conflicted_points_empty_when_one_ship(self):
         point = Point(2, 5)
         self.field.put_ship(self.ship, point)
-        assert list(self.field.get_conflicted_points()) == [ ]
+        assert list(self.field.get_conflicted_points()) == []
 
     def test_get_conflicted_points_when_main_point_conflict(self):
         self.ship.direction = 'horizontal'
@@ -104,7 +107,8 @@ class TestFieldPutShips:
             Point(4, 7),
         }
 
-    def test_get_conflicted_points_return_point_once_when_3_ships_in_conflict(self):
+    def test_get_conflicted_points_return_point_once_when_3_ships_in_conflict(
+            self):
         self.ship.direction = 'horizontal'
         self.field.put_ship(self.ship, Point(2, 5))
         self.big_ship.direction = 'vertical'
@@ -139,14 +143,14 @@ class TestFieldPutShips:
         }
 
     @pytest.mark.parametrize("x, y, direction",
-                             [ (0, 5, 'vertical'),
-                               (9, 5, 'vertical'),
-                               (0, 5, 'horizontal'),
-                               (7, 5, 'horizontal'),
-                               (2, 0, 'horizontal'),
-                               (2, 9, 'horizontal'),
-                               (2, 0, 'vertical'),
-                               (2, 7, 'vertical') ])
+                             [(0, 5, 'vertical'),
+                              (9, 5, 'vertical'),
+                              (0, 5, 'horizontal'),
+                              (7, 5, 'horizontal'),
+                              (2, 0, 'horizontal'),
+                              (2, 9, 'horizontal'),
+                              (2, 0, 'vertical'),
+                              (2, 7, 'vertical')])
     def test_put_ship_before_out_of_bounds(self, x, y, direction):
         point = Point(x, y)
         self.ship.direction = direction
@@ -154,14 +158,14 @@ class TestFieldPutShips:
         assert self.ship.position == point
 
     @pytest.mark.parametrize("x, y, direction",
-                             [ (-1, 5, 'vertical'),
-                               (10, 5, 'vertical'),
-                               (-1, 5, 'horizontal'),
-                               (8, 5, 'horizontal'),
-                               (2, -1, 'horizontal'),
-                               (2, 10, 'horizontal'),
-                               (2, -1, 'vertical'),
-                               (2, 8, 'vertical') ])
+                             [(-1, 5, 'vertical'),
+                              (10, 5, 'vertical'),
+                              (-1, 5, 'horizontal'),
+                              (8, 5, 'horizontal'),
+                              (2, -1, 'horizontal'),
+                              (2, 10, 'horizontal'),
+                              (2, -1, 'vertical'),
+                              (2, 8, 'vertical')])
     def test_put_ship_out_of_bounds(self, x, y, direction):
         point = Point(x, y)
         self.ship.direction = direction
@@ -186,43 +190,43 @@ class TestFieldPutShips:
 
     def test_get_ships_at_when_no_ship(self):
         point = Point(2, 5)
-        assert list(self.field.get_ships_at(point)) == [ ]
+        assert list(self.field.get_ships_at(point)) == []
 
     @pytest.mark.parametrize("dx, dy, direction",
-                             [ (0, 0, 'horizontal'),
-                               (1, 0, 'horizontal'),
-                               (2, 0, 'horizontal'),
-                               (0, 0, 'vertical'),
-                               (0, 1, 'vertical'),
-                               (0, 2, 'vertical') ])
+                             [(0, 0, 'horizontal'),
+                              (1, 0, 'horizontal'),
+                              (2, 0, 'horizontal'),
+                              (0, 0, 'vertical'),
+                              (0, 1, 'vertical'),
+                              (0, 2, 'vertical')])
     def test_get_ships_at_when_point_at_ship(self, dx, dy, direction):
         self.ship.direction = direction
         point = Point(2, 5)
         self.field.put_ship(self.ship, point)
         delta_point = Point(point.x + dx, point.y + dy)
-        assert list(self.field.get_ships_at(delta_point)) == [ self.ship ]
+        assert list(self.field.get_ships_at(delta_point)) == [self.ship]
 
     @pytest.mark.parametrize("dx, dy, direction",
-                             [ (-1, 0, 'horizontal'),
-                               (3, 0, 'horizontal'),
-                               (0, -1, 'horizontal'),
-                               (0, 1, 'horizontal'),
-                               (1, 0, 'vertical'),
-                               (-1, 0, 'vertical'),
-                               (0, -1, 'vertical'),
-                               (0, 3, 'vertical') ])
+                             [(-1, 0, 'horizontal'),
+                              (3, 0, 'horizontal'),
+                              (0, -1, 'horizontal'),
+                              (0, 1, 'horizontal'),
+                              (1, 0, 'vertical'),
+                              (-1, 0, 'vertical'),
+                              (0, -1, 'vertical'),
+                              (0, 3, 'vertical')])
     def test_get_ships_at_when_point_out_ship(self, dx, dy, direction):
         self.ship.direction = direction
         point = Point(2, 5)
         self.field.put_ship(self.ship, point)
         delta_point = Point(point.x + dx, point.y + dy)
-        assert list(self.field.get_ships_at(delta_point)) == [ ]
+        assert list(self.field.get_ships_at(delta_point)) == []
 
     def test_get_ships_after_put_fail(self):
         point = Point(8, 5)
         self.ship.direction = 'horizontal'
         self.field.put_ship(self.ship, point)
-        assert list(self.field.get_ships_at(point)) == [ ]
+        assert list(self.field.get_ships_at(point)) == []
 
     def test_get_ships_after_reset_ship(self):
         point = Point(2, 5)
@@ -231,7 +235,7 @@ class TestFieldPutShips:
 
         second_point = Point(3, 6)
         self.field.put_ship(self.ship, second_point)
-        assert list(self.field.get_ships_at(second_point)) == [ self.ship ]
+        assert list(self.field.get_ships_at(second_point)) == [self.ship]
 
     def test_get_ships_after_remove_ship(self):
         point = Point(2, 5)
@@ -240,14 +244,14 @@ class TestFieldPutShips:
 
         second_point = Point(10, 6)
         self.field.put_ship(self.ship, second_point)
-        assert list(self.field.get_ships_at(point)) == [ ]
+        assert list(self.field.get_ships_at(point)) == []
 
     def test_get_ships_return_one_ship_when_double_placed(self):
         point = Point(2, 5)
         self.ship.direction = 'horizontal'
         self.field.put_ship(self.ship, point)
         self.field.put_ship(self.ship, point)
-        assert list(self.field.get_ships_at(point)) == [ self.ship ]
+        assert list(self.field.get_ships_at(point)) == [self.ship]
 
     def test_get_ships_return_from_small_to_big(self):
         point = Point(2, 5)

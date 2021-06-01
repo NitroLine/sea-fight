@@ -18,7 +18,8 @@ class FieldView(BaseView):
     def setup(self, field, fog_of_war):
         self.fog_of_war = fog_of_war
         self.field = field
-        self.rects = self.generate_point_to_rect(self.rect.width, self.rect.height)
+        self.rects = self.generate_point_to_rect(self.rect.width,
+                                                 self.rect.height)
 
     def change_size(self, width, height):
         self.rect.width = width
@@ -33,7 +34,8 @@ class FieldView(BaseView):
                 right = (width - 2) * (x + 1) // self.field.width + 1
                 top = (height - 2) * y // self.field.height + 1
                 bottom = (height - 2) * (y + 1) // self.field.height + 1
-                rectangle = Rect(self.x + left, self.y + top, right - left, bottom - top)
+                rectangle = Rect(self.x + left, self.y + top, right - left,
+                                 bottom - top)
                 res[Point(x, y)] = rectangle
         return res
 
@@ -52,10 +54,12 @@ class FieldView(BaseView):
         shots = self.field.get_shoots()
         for shot in shots:
             Drawer.draw_shot_cell(surface, self.rects[shot])
-        for ship in filter(lambda x: x != self.now_selected_ship, self.field.get_ships()):
+        for ship in filter(lambda x: x != self.now_selected_ship,
+                           self.field.get_ships()):
             self.draw_ship(surface, ship, conflicted_points, shots, False)
         if self.now_selected_ship is not None:
-            self.draw_ship(surface, self.now_selected_ship, conflicted_points, shots, True)
+            self.draw_ship(surface, self.now_selected_ship, conflicted_points,
+                           shots, True)
 
     def global_pos_to_local_point(self, pos):
         for point in self.rects:
@@ -75,8 +79,10 @@ class Drawer:
         draw.rect(surface, color, rect)
         draw.rect(surface, border_color, rect, 4)
         if is_shot:
-            draw.line(surface, DESTROY_SHIP_COLOR, rect.topleft, rect.bottomright)
-            draw.line(surface, DESTROY_SHIP_COLOR, rect.topright, rect.bottomleft)
+            draw.line(surface, DESTROY_SHIP_COLOR, rect.topleft,
+                      rect.bottomright)
+            draw.line(surface, DESTROY_SHIP_COLOR, rect.topright,
+                      rect.bottomleft)
 
     @staticmethod
     def draw_cell(surface, rect):

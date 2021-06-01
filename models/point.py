@@ -18,4 +18,4 @@ class Point:
         return self.x * 809 + self.y
 
     def __add__(self, other):
-        return Point(self.x+other.x,self.y+other.y)
+        return Point(self.x + other.x, self.y + other.y)

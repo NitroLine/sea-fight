@@ -30,14 +30,17 @@ class AutomaticPutShip(BaseAI):
             self.field.put_ship(ship, p)
             if ship.position is None:
                 return
-            for j in range(random.randint(0, len(directions_for_size[ship.size]))):
+            for j in range(
+                    random.randint(0, len(directions_for_size[ship.size]))):
                 self.field.change_ship_direction(ship)
             if any(self.field.get_conflicted_points()):
                 self.field.put_ship(ship, Point(-1, -1))
-        return self.field.get_first_to_put_ship() is None and not any(self.field.get_conflicted_points())
+        return self.field.get_first_to_put_ship() is None and not any(
+            self.field.get_conflicted_points())
 
     def remove_all_ships(self):
-        for ship in filter(lambda s: s.position is not None, self.field.get_ships()):
+        for ship in filter(lambda s: s.position is not None,
+                           self.field.get_ships()):
             self.field.put_ship(ship, Point(-1, -1))
 
     def put_ship_automatic(self):
@@ -63,7 +66,7 @@ class SimpleRandomAI(AutomaticPutShip):
                         point = Point(last_hit.x + 1, last_hit.y)
                         if self.field.is_inside_field(point):
                             return point
-                    if  not self.is_up_point_shot(last_hit, shots):
+                    if not self.is_up_point_shot(last_hit, shots):
                         point = Point(last_hit.x, last_hit.y + 1)
                         if self.field.is_inside_field(point):
                             return point

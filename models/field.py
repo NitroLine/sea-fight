@@ -1,6 +1,6 @@
 from .model import EventEmitter
 from .point import Point
-from .ship import Ship,directions_for_size
+from .ship import Ship, directions_for_size
 
 
 class Field(EventEmitter):
@@ -19,7 +19,9 @@ class Field(EventEmitter):
         return list(self._ships)
 
     def get_first_to_put_ship(self):
-        return next(filter(lambda x: x.position is None, sorted(self._ships, key=lambda x: x.size, reverse=True)), None)
+        return next(filter(lambda x: x.position is None,
+                           sorted(self._ships, key=lambda x: x.size,
+                                  reverse=True)), None)
 
     def put_ship(self, ship, point):
         if not isinstance(ship, Ship):
@@ -35,7 +37,7 @@ class Field(EventEmitter):
         self.emit({'name': 'updated'})
         return False
 
-    def is_inside_field(self,point):
+    def is_inside_field(self, point):
         return 0 <= point.x < self.width and 0 <= point.y < self.height
 
     def get_ships_at(self, point):
@@ -59,16 +61,18 @@ class Field(EventEmitter):
 
     def get_ship_rounded_points(self, ship):
         return set(filter(self.is_inside_field,
-                          [p for point in ship.get_position_points() for p in point.get_round_points()]))
+                          [p for point in ship.get_position_points() for p in
+                           point.get_round_points()]))
 
     def check_overflow_and_reset(self, ship):
         pos = ship.position
         if pos is None:
             return False
-        overflow_y = pos.y + ship.dy - self.height +1
+        overflow_y = pos.y + ship.dy - self.height + 1
         overflow_x = pos.x + ship.dx - self.width + 1
         if overflow_y > 0 or overflow_x > 0:
-            new_pos = Point(pos.x - max(0, overflow_x), pos.y - max(0, overflow_y))
+            new_pos = Point(pos.x - max(0, overflow_x),
+                            pos.y - max(0, overflow_y))
             if new_pos.y < 0 or new_pos.x < 0:
                 ship.position = None
                 return False
@@ -86,7 +90,7 @@ class Field(EventEmitter):
         directions = directions_for_size[ship.size]
         cur_direction = ship.direction
         cur_direction_index = directions.index(cur_direction)
-        next_direction_index =  cur_direction_index + 1
+        next_direction_index = cur_direction_index + 1
         if next_direction_index >= len(directions):
             next_direction_index = 0
         next_direction = directions[next_direction_index]
@@ -99,13 +103,15 @@ class Field(EventEmitter):
         return True
 
     def get_conflicted_points(self):
-        ship_to_round_points = dict([(s, self.get_ship_rounded_points(s)) for s in self._ships])
+        ship_to_round_points = dict(
+            [(s, self.get_ship_rounded_points(s)) for s in self._ships])
         res = set()
         for ship in self._ships:
             position_points = ship.get_position_points()
             for point in position_points:
                 is_point_in_other_ship = any(
-                    map(lambda pair: not pair[0] == ship and point in pair[1], ship_to_round_points.items()))
+                    map(lambda pair: not pair[0] == ship and point in pair[1],
+                        ship_to_round_points.items()))
                 if is_point_in_other_ship:
                     res.add(point)
         return res
@@ -113,7 +119,8 @@ class Field(EventEmitter):
     def is_alive(self, ship):
         if ship not in self._ships:
             raise RuntimeError("Cant find ship")
-        return any(map(lambda point: point not in self._shots, ship.get_position_points()))
+        return any(map(lambda point: point not in self._shots,
+                       ship.get_position_points()))
 
     def has_alive_ship(self):
         return any(map(lambda ship: self.is_alive(ship), self._ships))

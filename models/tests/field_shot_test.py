@@ -5,7 +5,6 @@ from ..point import Point
 from ..ship import Ship
 
 
-
 class TestFieldPutShips:
     def setup(self):
         self.ship = Ship(3)
@@ -100,31 +99,38 @@ class TestFieldPutShips:
         self.field.put_ship(self.ship, Point(2, 5))
         self.field.shoot_to(Point(2, 5))
         self.field.shoot_to(Point(3, 5))
-        assert self.field.shoot_to(Point(4,5)) == 'hit'\
+        assert self.field.shoot_to(Point(4, 5)) == 'hit'
 
     def test_shoot_to_blow_up_shoots(self):
         self.field.put_ship(self.ship, Point(2, 5))
         self.field.shoot_to(Point(2, 5))
         self.field.shoot_to(Point(3, 5))
         self.field.shoot_to(Point(4, 5))
-        assert self.field.get_shoots() ==  {Point(1,4), Point(2,4),Point(3,4),Point(4,4),Point(5,4),
-                                            Point(1,5), Point(2,5),Point(3,5),Point(4,5),Point(5,5),
-                                            Point(1,6), Point(2,6),Point(3,6),Point(4,6),Point(5,6)}
+        assert self.field.get_shoots() == {Point(1, 4), Point(2, 4),
+                                           Point(3, 4), Point(4, 4),
+                                           Point(5, 4),
+                                           Point(1, 5), Point(2, 5),
+                                           Point(3, 5), Point(4, 5),
+                                           Point(5, 5),
+                                           Point(1, 6), Point(2, 6),
+                                           Point(3, 6), Point(4, 6),
+                                           Point(5, 6)}
+
     @pytest.mark.parametrize("x, y",
-                             [(1,4), (2,4),(3,4),(4,4),(5,4),
-                                (1,5), (2,5),(3,5),(4,5),(5,5),
-                                (1,6), (2,6),(3,6),(4,6),(5,6)])
+                             [(1, 4), (2, 4), (3, 4), (4, 4), (5, 4),
+                              (1, 5), (2, 5), (3, 5), (4, 5), (5, 5),
+                              (1, 6), (2, 6), (3, 6), (4, 6), (5, 6)])
     def test_shoot_to_cancel_after_blow_up(self, x, y):
         self.field.put_ship(self.ship, Point(2, 5))
         self.field.shoot_to(Point(2, 5))
         self.field.shoot_to(Point(3, 5))
         self.field.shoot_to(Point(4, 5))
-        assert self.field.shoot_to(Point(x,y)) == 'cancel'
+        assert self.field.shoot_to(Point(x, y)) == 'cancel'
 
     @pytest.mark.parametrize("x, y",
-                             [(1,4), (2,4),(3,4),(4,4),(5,4),
-                                (1,5), (2,5),(3,5),(4,5),(5,5),
-                                (1,6), (2,6),(3,6),(4,6),(5,6)])
+                             [(1, 4), (2, 4), (3, 4), (4, 4), (5, 4),
+                              (1, 5), (2, 5), (3, 5), (4, 5), (5, 5),
+                              (1, 6), (2, 6), (3, 6), (4, 6), (5, 6)])
     def test_shoot_to_not_duplicate_after_blow_up(self, x, y):
         self.field.put_ship(self.ship, Point(2, 5))
         self.field.shoot_to(Point(2, 5))
@@ -132,9 +138,15 @@ class TestFieldPutShips:
         self.field.shoot_to(Point(4, 5))
         shoot_to = Point(x, y)
         self.field.shoot_to(shoot_to)
-        assert self.field.get_shoots() == {Point(1, 4), Point(2, 4), Point(3, 4), Point(4, 4), Point(5, 4),
-                                           Point(1, 5), Point(2, 5), Point(3, 5), Point(4, 5), Point(5, 5),
-                                           Point(1, 6), Point(2, 6), Point(3, 6), Point(4, 6), Point(5, 6)}
+        assert self.field.get_shoots() == {Point(1, 4), Point(2, 4),
+                                           Point(3, 4), Point(4, 4),
+                                           Point(5, 4),
+                                           Point(1, 5), Point(2, 5),
+                                           Point(3, 5), Point(4, 5),
+                                           Point(5, 5),
+                                           Point(1, 6), Point(2, 6),
+                                           Point(3, 6), Point(4, 6),
+                                           Point(5, 6)}
 
     def test_shoot_to_blow_up_top_left_corner(self):
         self.ship.direction = 'horizontal'
@@ -142,8 +154,10 @@ class TestFieldPutShips:
         self.field.shoot_to(Point(0, 0))
         self.field.shoot_to(Point(1, 0))
         self.field.shoot_to(Point(2, 0))
-        assert self.field.get_shoots() == {Point(0, 0), Point(1, 0), Point(2, 0), Point(3, 0),
-                                           Point(0, 1), Point(1, 1), Point(2, 1), Point(3, 1)}
+        assert self.field.get_shoots() == {Point(0, 0), Point(1, 0),
+                                           Point(2, 0), Point(3, 0),
+                                           Point(0, 1), Point(1, 1),
+                                           Point(2, 1), Point(3, 1)}
 
     def test_shoot_to_blow_up_top_right_corner(self):
         self.ship.direction = 'vertical'
@@ -151,8 +165,10 @@ class TestFieldPutShips:
         self.field.shoot_to(Point(9, 0))
         self.field.shoot_to(Point(9, 1))
         self.field.shoot_to(Point(9, 2))
-        assert self.field.get_shoots() == {Point(8, 0), Point(9, 0), Point(8, 1), Point(9, 1),
-                                           Point(8, 2), Point(9, 2), Point(8, 3), Point(9, 3)}
+        assert self.field.get_shoots() == {Point(8, 0), Point(9, 0),
+                                           Point(8, 1), Point(9, 1),
+                                           Point(8, 2), Point(9, 2),
+                                           Point(8, 3), Point(9, 3)}
 
     def test_shoot_to_blow_up_bottom_left_corner(self):
         self.ship.direction = 'horizontal'
@@ -160,8 +176,10 @@ class TestFieldPutShips:
         self.field.shoot_to(Point(7, 9))
         self.field.shoot_to(Point(8, 9))
         self.field.shoot_to(Point(9, 9))
-        assert self.field.get_shoots() == {Point(6, 8), Point(7, 8), Point(8, 8), Point(9, 8),
-                                           Point(6, 9), Point(7, 9), Point(8, 9), Point(9, 9)}
+        assert self.field.get_shoots() == {Point(6, 8), Point(7, 8),
+                                           Point(8, 8), Point(9, 8),
+                                           Point(6, 9), Point(7, 9),
+                                           Point(8, 9), Point(9, 9)}
 
     def test_shoot_to_blow_up_bottom_right_corner(self):
         self.ship.direction = 'vertical'
@@ -169,8 +187,10 @@ class TestFieldPutShips:
         self.field.shoot_to(Point(0, 7))
         self.field.shoot_to(Point(0, 8))
         self.field.shoot_to(Point(0, 9))
-        assert self.field.get_shoots() == {Point(0, 6), Point(1, 6), Point(0, 7), Point(1, 7),
-                                           Point(0, 8), Point(1, 8), Point(0, 9), Point(1, 9)}
+        assert self.field.get_shoots() == {Point(0, 6), Point(1, 6),
+                                           Point(0, 7), Point(1, 7),
+                                           Point(0, 8), Point(1, 8),
+                                           Point(0, 9), Point(1, 9)}
 
     def test_get_shoots_when_two_ships_hit(self):
         self.ship.direction = 'horizontal'
@@ -185,9 +205,12 @@ class TestFieldPutShips:
         self.field.put_ship(self.small_ship, Point(2, 5))
         self.field.shoot_to(Point(2, 5))
         self.field.shoot_to(Point(8, 5))
-        assert self.field.get_shoots() == {Point(1, 4), Point(2, 4), Point(3,4),
-                                           Point(1, 5), Point(2, 5), Point(3, 5),
-                                           Point(1, 6), Point(2, 6), Point(3, 6),
+        assert self.field.get_shoots() == {Point(1, 4), Point(2, 4),
+                                           Point(3, 4),
+                                           Point(1, 5), Point(2, 5),
+                                           Point(3, 5),
+                                           Point(1, 6), Point(2, 6),
+                                           Point(3, 6),
                                            Point(8, 5)}
 
     def test_is_alive_raise_when_ship_not_added(self):
@@ -259,5 +282,3 @@ class TestFieldPutShips:
         self.field.shoot_to(Point(8, 4))
         self.field.shoot_to(Point(8, 6))
         assert not self.field.has_alive_ship()
-
-

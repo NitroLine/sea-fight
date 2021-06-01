@@ -33,12 +33,15 @@ class PuttingShipsControl(BaseView):
             selected_ship = self.field_view.now_selected_ship
             if selected_ship is not None:
                 if point in selected_ship.get_position_points():
-                    self.game.current_player.field.change_ship_direction(selected_ship)
+                    self.game.current_player.field.change_ship_direction(
+                        selected_ship)
                 else:
-                    self.game.current_player.field.put_ship(selected_ship, point)
+                    self.game.current_player.field.put_ship(selected_ship,
+                                                            point)
                 self.field_view.now_selected_ship = None
                 return
-            ship_on_point = next(self.game.current_player.field.get_ships_at(point), None)
+            ship_on_point = next(
+                self.game.current_player.field.get_ships_at(point), None)
             if ship_on_point is not None:
                 self.field_view.now_selected_ship = ship_on_point
                 return

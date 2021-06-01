@@ -1,5 +1,5 @@
-from ..ship import Ship
 from ..field import Field
+from ..ship import Ship
 
 
 class TestFieldAddShips:
@@ -16,10 +16,10 @@ class TestFieldAddShips:
         self.field.add_ship(self.ship)
         self.field.add_ship(self.big_ship)
         self.field.add_ship(self.small_ship)
-        assert set(self.field.get_ships()) == {self.ship, self.big_ship, self.small_ship}
+        assert set(self.field.get_ships()) == {self.ship, self.big_ship,
+                                               self.small_ship}
 
     def test_get_ships_not_return_duplicate(self):
         self.field.add_ship(self.ship)
         self.field.add_ship(self.ship)
         assert self.field.get_ships() == [self.ship]
-

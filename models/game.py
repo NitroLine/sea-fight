@@ -57,7 +57,8 @@ class Game(EventEmitter):
 
     @staticmethod
     def is_ready_for_battle(player):
-        return player.field.get_first_to_put_ship() is None and not any(player.field.get_conflicted_points())
+        return player.field.get_first_to_put_ship() is None and not any(
+            player.field.get_conflicted_points())
 
     def move_to_next_player(self):
         self.current_turn = not self.current_turn
