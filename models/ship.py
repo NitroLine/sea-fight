@@ -12,13 +12,15 @@ directions = {
     'line-3' : [Point(0,0),Point(0,1),Point(0,2),Point(1,0),Point(2,0)],
     'line-4' : [Point(0,0),Point(1,0),Point(1,1),Point(1,2),Point(2,2)],
     'line-5' : [Point(0,0),Point(0,1),Point(1,1),Point(2,1),Point(2,2)],
+    'line-6' : [Point(0,0),Point(0,1),Point(1,1),Point(0,2),Point(2,2)],
+    'line-7' : [Point(0,0),Point(1,0),Point(1,1),Point(2,0),Point(2,2)],
 }
 
 directions_for_size = {
     1: ['horizontal'],
     2: ['horizontal', 'vertical'],
     3: ['horizontal', 'vertical', 'cube-1', 'cube-3', 'cube-4'],
-    4: ['horizontal', 'vertical', 'cube-1', 'line-1','line-2','line-3','line-4','line-5'],
+    4: ['horizontal', 'vertical', 'cube-1', 'line-1','line-2','line-3','line-4','line-5','line-6','line-7'],
     5: ['horizontal', 'vertical', 'cube-1','cube-2', 'cube-3', 'cube-4', 'line-1','line-2','line-3','line-4','line-5'],
 }
 
