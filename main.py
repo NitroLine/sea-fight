@@ -151,8 +151,7 @@ class Window:
     def validate_text_field(self):
         cur_text = self.setup_game_scene['input'].text
         if not cur_text.isdigit():
-            self.setup_game_scene[
-                'error_text'].text =\
+            self.setup_game_scene['error_text'].text =\
                 'Check the correctness of the entered data'
         try:
             time = int(cur_text)
@@ -163,8 +162,8 @@ class Window:
                 self.setup_game_scene['error_text'].text = \
                     'Check the correctness of the entered data'
         except ValueError:
-            self.setup_game_scene[
-                'error_text'].text = 'Check the correctness of the entered data'
+            self.setup_game_scene['error_text'].text =\
+                'Check the correctness of the entered data'
 
     def resume_game(self):
         if self.is_two_player and self.last_scene == self.two_player_fight:
