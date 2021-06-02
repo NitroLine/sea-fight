@@ -152,15 +152,16 @@ class Window:
         cur_text = self.setup_game_scene['input'].text
         if not cur_text.isdigit():
             self.setup_game_scene[
-                'error_text'].text = 'Check the correctness of the entered data'
+                'error_text'].text =\
+                'Check the correctness of the entered data'
         try:
             time = int(cur_text)
             if time > 0:
                 self.timer_time = time
                 self.start_two_player_game()
             else:
-                self.setup_game_scene[
-                    'error_text'].text = 'Check the correctness of the entered data'
+                self.setup_game_scene['error_text'].text = \
+                    'Check the correctness of the entered data'
         except ValueError:
             self.setup_game_scene[
                 'error_text'].text = 'Check the correctness of the entered data'
@@ -177,11 +178,10 @@ class Window:
         self.game.start('First', 'Second')
         self.putting_ships_first['player_field'].setup(
             self.game.first_player.field, False)
-        self.putting_ships_first['putting_ships_controller'].setup(self.game,
-                                                                   self.putting_ships_first[
-                                                                       'go_next_button'],
-                                                                   self.putting_ships_first[
-                                                                       'player_field'])
+        self.putting_ships_first['putting_ships_controller'].setup(
+            self.game,
+            self.putting_ships_first['go_next_button'],
+            self.putting_ships_first['player_field'])
         self.is_two_player = True
         self.current_scene = self.putting_ships_first
 
@@ -190,11 +190,10 @@ class Window:
         self.putting_ships_human['player_field'].setup(
             self.game.first_player.field, False)
         self.is_two_player = False
-        self.putting_ships_human['putting_ships_controller'].setup(self.game,
-                                                                   self.putting_ships_human[
-                                                                       'go_next_button'],
-                                                                   self.putting_ships_human[
-                                                                       'player_field'])
+        self.putting_ships_human['putting_ships_controller'].setup(
+            self.game,
+            self.putting_ships_human['go_next_button'],
+            self.putting_ships_human['player_field'])
         self.current_scene = self.putting_ships_human
 
     def restart_game(self):
@@ -224,11 +223,10 @@ class Window:
                         self.putting_ships_second['player_field'].setup(
                             self.game.second_player.field, False)
                         self.putting_ships_second[
-                            'putting_ships_controller'].setup(self.game,
-                                                              self.putting_ships_second[
-                                                                  'go_next_button'],
-                                                              self.putting_ships_second[
-                                                                  'player_field'])
+                            'putting_ships_controller'].setup(
+                            self.game,
+                            self.putting_ships_second['go_next_button'],
+                            self.putting_ships_second['player_field'])
                         self.current_scene = self.putting_ships_second
                     if event.data['name'] == 'state_changed' \
                             and event.data['new_stage'] == 'battle':
@@ -237,22 +235,23 @@ class Window:
                                 self.game,
                                 self.two_player_fight['first_player_field'],
                                 self.two_player_fight['second_player_field'])
-                            self.two_player_fight['timer'].setup(pygame,
-                                                                 self.timer_time,
-                                                                 self.game.move_to_next_player)
+                            self.two_player_fight['timer'].setup(
+                                pygame,
+                                self.timer_time,
+                                self.game.move_to_next_player)
                             self.current_scene = self.two_player_fight
                         else:
-                            self.against_ai_battle_scene[
-                                'fight_controller'].setup(self.game,
-                                                          self.against_ai_battle_scene[
-                                                              'player_field'],
-                                                          self.against_ai_battle_scene[
-                                                              'ai_field'])
+                            self.against_ai_battle_scene['fight_controller']\
+                                .setup(
+                                self.game,
+                                self.against_ai_battle_scene['player_field'],
+                                self.against_ai_battle_scene['ai_field'])
                             self.current_scene = self.against_ai_battle_scene
                     if event.data['name'] == 'state_changed' \
                             and event.data['new_stage'] == 'finished':
                         self.end_screen[
-                            'who_win_text'].text = self.game.current_player.name + " WIN"
+                            'who_win_text'].text = \
+                            self.game.current_player.name + " WIN"
                         self.end_screen['first_player_field'].setup(
                             self.game.first_player.field, False)
                         self.end_screen['second_player_field'].setup(
@@ -262,7 +261,7 @@ class Window:
                             and self.game.stage == "battle" \
                             and self.is_two_player:
                         self.two_player_fight['which_turn_text'].text = \
-                        event.data['player'].name + " Turn"
+                            event.data['player'].name + " Turn"
                         self.two_player_fight['timer'].reset()
                 for element in self.current_scene.values():
                     element.check_event(event)
