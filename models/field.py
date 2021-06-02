@@ -28,11 +28,11 @@ class Field(EventEmitter):
             raise TypeError
         if ship not in self._ships:
             raise RuntimeError("Cant find ship")
-        if (0 <= point.x and point.x + ship.dx < self.width
-                and 0 <= point.y and point.y + ship.dy < self.height):
+        if point is not None and (0 <= point.x <= self.width
+                                  and 0 <= point.y <= self.height):
             ship.position = point
             self.emit({'name': 'updated'})
-            return True
+            return not self.check_overflow_and_reset(ship)
         ship.position = None
         self.emit({'name': 'updated'})
         return False

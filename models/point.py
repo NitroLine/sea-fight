@@ -12,6 +12,8 @@ class Point:
                 yield Point(self.x + dx, self.y + dy)
 
     def __eq__(self, other):
+        if other is None:
+            return False
         return self.x == other.x and self.y == other.y
 
     def __hash__(self):
