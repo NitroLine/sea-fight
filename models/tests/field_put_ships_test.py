@@ -54,7 +54,7 @@ class TestFieldPutShips:
         field.add_ship(ship)
         ship.direction = 'horizontal'
         field.put_ship(ship, Point(0, 0))
-        assert field.change_ship_direction(ship) == False
+        assert not field.change_ship_direction(ship)
         assert ship.position is None
 
     def test_get_conflicted_points_no_ships(self):
