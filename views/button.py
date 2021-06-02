@@ -50,7 +50,6 @@ class Button(BaseView):
             self.text = self.font.render(self.text, True, self.font_color)
 
     def check_event(self, event):
-        """The button needs to be passed events from your program event loop."""
         if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
             self.on_click(event)
         elif event.type == pg.MOUSEBUTTONUP and event.button == 1:

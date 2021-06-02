@@ -44,7 +44,8 @@ class PuttingShipsControl(BaseView):
                 self.field_view.now_selected_ship = ship_on_point
                 return
 
-            ship_to_put = self.game.current_player.field.get_first_to_put_ship()
+            ship_to_put = \
+                self.game.current_player.field.get_first_to_put_ship()
             if ship_to_put is not None:
                 self.game.current_player.field.put_ship(ship_to_put, point)
                 return
@@ -52,7 +53,8 @@ class PuttingShipsControl(BaseView):
     def check_event(self, event):
         if event.type == pygame.USEREVENT:
             if event.data['name'] == 'updated':
-                self.end_button.hidden = not self.game.is_current_can_end_putting()
+                self.end_button.hidden =\
+                    not self.game.is_current_can_end_putting()
 
         if event.type == pygame.MOUSEBUTTONUP:
             pos = pygame.mouse.get_pos()

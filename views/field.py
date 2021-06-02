@@ -74,7 +74,8 @@ class Drawer:
 
     @staticmethod
     def draw_ship_cell(surface, rect, is_shot, in_conflict, use_light):
-        border_color = SELECTED_BORDER_SHIP_COLOR if use_light else BORDER_SHIP_COLOR
+        border_color = SELECTED_BORDER_SHIP_COLOR if use_light\
+            else BORDER_SHIP_COLOR
         color = CONFLICTED_SHIP_COLOR if in_conflict else SHIP_COLOR
         draw.rect(surface, color, rect)
         draw.rect(surface, border_color, rect, 4)

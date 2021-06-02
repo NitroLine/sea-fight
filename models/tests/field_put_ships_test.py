@@ -142,13 +142,11 @@ class TestFieldPutShips:
             Point(4, 5),
         }
 
-
-
     @pytest.mark.parametrize("x, y, direction",
                              [(-1, 5, 'vertical'),
                               (-1, 5, 'horizontal'),
                               (2, -1, 'horizontal'),
-                              (2, -1, 'vertical'),])
+                              (2, -1, 'vertical'), ])
     def test_put_ship_out_of_bounds(self, x, y, direction):
         point = Point(x, y)
         self.ship.direction = direction

@@ -67,7 +67,8 @@ class FightAgainstAIControl(BaseView):
             self.click_on_point(pos, event.button)
         if event.type == pygame.USEREVENT:
             if event.data['name'] == 'ready_to_shoot':
-                if self.game.stage == 'battle' and self.game.current_player == self.game.second_player:
+                if self.game.stage == 'battle' and \
+                        self.game.current_player == self.game.second_player:
                     self.ai.setup(self.game.first_player.field)
                     shot = self.ai.generate_shot(turns=self.ai_turns)
                     self.ai_turns.append(self.game.shoot_to(shot))
