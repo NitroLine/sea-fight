@@ -142,30 +142,13 @@ class TestFieldPutShips:
             Point(4, 5),
         }
 
-    @pytest.mark.parametrize("x, y, direction",
-                             [(0, 5, 'vertical'),
-                              (9, 5, 'vertical'),
-                              (0, 5, 'horizontal'),
-                              (7, 5, 'horizontal'),
-                              (2, 0, 'horizontal'),
-                              (2, 9, 'horizontal'),
-                              (2, 0, 'vertical'),
-                              (2, 7, 'vertical')])
-    def test_put_ship_before_out_of_bounds(self, x, y, direction):
-        point = Point(x, y)
-        self.ship.direction = direction
-        assert self.field.put_ship(self.ship, point)
-        assert self.ship.position == point
+
 
     @pytest.mark.parametrize("x, y, direction",
                              [(-1, 5, 'vertical'),
-                              (10, 5, 'vertical'),
                               (-1, 5, 'horizontal'),
-                              (8, 5, 'horizontal'),
                               (2, -1, 'horizontal'),
-                              (2, 10, 'horizontal'),
-                              (2, -1, 'vertical'),
-                              (2, 8, 'vertical')])
+                              (2, -1, 'vertical'),])
     def test_put_ship_out_of_bounds(self, x, y, direction):
         point = Point(x, y)
         self.ship.direction = direction
@@ -184,7 +167,7 @@ class TestFieldPutShips:
         point = Point(2, 5)
         self.field.put_ship(self.ship, point)
 
-        second_point = Point(10, 5)
+        second_point = Point(10, -5)
         assert not self.field.put_ship(self.ship, second_point)
         assert self.ship.position is None
 
@@ -223,7 +206,7 @@ class TestFieldPutShips:
         assert list(self.field.get_ships_at(delta_point)) == []
 
     def test_get_ships_after_put_fail(self):
-        point = Point(8, 5)
+        point = Point(8, -5)
         self.ship.direction = 'horizontal'
         self.field.put_ship(self.ship, point)
         assert list(self.field.get_ships_at(point)) == []
